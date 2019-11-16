@@ -17,10 +17,11 @@ type binarytreeMachine struct {
 }
 
 func getBFuzzedKey() interface{} {
-	f := fuzz.New()
+	f := fuzz.New().NilChance(0) // we can't use nils
+	// my library uses nil interfaces as sentinels
 	var ret interface{}
 
-	switch n := rand.Intn(10); n {
+	switch n := rand.Intn(9); n {
 	case 0:
 		var key string
 		f.Fuzz(&key)

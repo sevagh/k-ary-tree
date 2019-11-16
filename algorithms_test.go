@@ -128,7 +128,6 @@ func constructTree(K int) karytree.Node {
 		for l := 0; l < K; l++ {
 			grandchild := karytree.New(K, key)
 			key++
-
 			nth := curr.NthChild(k)
 			nth.SetNthChild(l, &grandchild)
 			for m := 0; m < K; m++ {

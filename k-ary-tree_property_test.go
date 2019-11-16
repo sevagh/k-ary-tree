@@ -18,10 +18,13 @@ type karytreeMachine struct {
 }
 
 func getKFuzzedKey() interface{} {
-	f := fuzz.New()
-	var ret interface{}
+	f := fuzz.New().NilChance(0) // we can't use nils
+	// my library uses nil interfaces as sentinels
 
-	switch n := rand.Intn(10); n {
+	var ret interface{}
+	var n int
+
+	switch n = rand.Intn(9); n {
 	case 0:
 		var key string
 		f.Fuzz(&key)

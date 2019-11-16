@@ -14,13 +14,15 @@ package karytree
 // A Node is a typical recursive tree node, and it represents a tree
 // when it's traversed. The key is for data stored in the node.
 type Node struct {
-	key      interface{}
-	firstChild *Node
+	key         interface{}
+	firstChild  *Node
 	nextSibling *Node
 }
 
 // New creates a new node with k = k and data key. []*Node children
 // is an uninitialized slice.
+//
+// Don't use nil keys, these are used as a sentinel in the library.
 func New(k int, key interface{}) Node {
 	n := Node{}
 	n.key = key
@@ -39,49 +41,62 @@ func (k *Node) K() int {
 // that node is returned.
 func (k *Node) SetNthChild(n int, other *Node) *Node {
 	if n == 0 {
-		return k.firstChild
+		ret := k.firstChild
+		k.firstChild = other
+		if ret != nil {
+			k.firstChild.nextSibling = ret.nextSibling
+		}
+		return ret
 	}
-	var curr *Node
+
 	if k.firstChild == nil {
 		next := New(0, nil)
 		k.firstChild = &next
-		curr = k.firstChild
 	}
+	curr := k.firstChild
+
 	for nLocal := 1; nLocal != n; nLocal++ {
-		possibleNext := curr.nextSibling
-		if possibleNext != nil {
-			curr = possibleNext
-		} else {
+		if curr.nextSibling == nil {
 			next := New(0, nil)
 			curr.nextSibling = &next
-			curr = curr.nextSibling
 		}
+		curr = curr.nextSibling
 	}
-	return curr
+
+	ret := curr.nextSibling
+	curr.nextSibling = other
+	if ret != nil {
+		curr.nextSibling.nextSibling = ret.nextSibling
+	}
+	return ret
 }
 
 // NthChild gets the Nth child.
 func (k *Node) NthChild(n int) *Node {
+	if n == 0 {
+		if k.firstChild != nil && k.firstChild.key == nil {
+			return nil // this is our own sentinel
+		}
+		return k.firstChild
+	}
+
 	if k.firstChild == nil {
 		return nil
 	}
-
-	if n == 0 && k.firstChild.key == nil {
-		return nil
-	}
-
 	curr := k.firstChild
+
 	for nLocal := 1; nLocal != n; nLocal++ {
-		possibleNext := curr.nextSibling
-		if possibleNext == nil {
+		if curr.nextSibling == nil {
 			return nil
 		}
-		curr = possibleNext
+		curr = curr.nextSibling
 	}
-	if curr.nextSibling != nil && curr.nextSibling.key == nil {
+
+	ret := curr.nextSibling
+	if ret != nil && ret.key == nil {
 		return nil
 	}
-	return curr.nextSibling
+	return ret
 }
 
 // Key gets the data stored in a node
