@@ -1,5 +1,7 @@
 package karytree
 
+//import "fmt"
+
 // BFS is a channel-based BFS for tree nodes.
 // Channels are used similar to Python generators.
 // Inspired by https://blog.carlmjohnson.net/post/on-using-go-channels-like-python-generators/
@@ -15,17 +17,18 @@ func BFS(root *Node, quit <-chan struct{}) <-chan *Node {
 		for len(queue) > 0 {
 			curr, queue = queue[0], queue[1:]
 
+			//fmt.Printf("BFS: %+v\n", curr)
+
 			select {
 			case <-quit:
 				return
 			case nChan <- curr:
 			}
 
-			for i := 0; i < root.K(); i++ {
-				child := curr.NthChild(i)
-				if child != nil {
-					queue = append(queue, child)
-				}
+			next := curr.firstChild
+			for next != nil {
+				queue = append(queue, next)
+				next = next.nextSibling
 			}
 		}
 	}()
@@ -52,14 +55,15 @@ func Equals(a, b *Node) bool {
 		return false
 	}
 
-	// recursively check all children
-	for i := 0; i < a.K(); i++ {
-		aIth := a.NthChild(i)
-		bIth := b.NthChild(i)
 
-		if !Equals(aIth, bIth) {
+	nextA := a.firstChild
+	nextB := b.firstChild
+	for nextA != nil && nextB != nil {
+		if !Equals(nextA, nextB) {
 			return false
 		}
+		nextA = nextA.nextSibling
+		nextB = nextB.nextSibling
 	}
 
 	return true

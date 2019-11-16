@@ -63,7 +63,7 @@ func getQFuzzedKey() interface{} {
 }
 
 func (m *quadtreeMachine) Init(t *rapid.T) {
-	m.r = karytree.RegionQuadtree(getBFuzzedKey())
+	m.r = karytree.RegionQuadtree(getQFuzzedKey())
 	t.Logf("Created binary-tree node\n")
 }
 
@@ -124,7 +124,7 @@ func (m *quadtreeMachine) Put(t *rapid.T) {
 			curr = existingChild
 			lastFuzzedKey = curr.Key()
 		} else {
-			newFuzzedKey := getBFuzzedKey()
+			newFuzzedKey := getQFuzzedKey()
 			newNode := karytree.RegionQuadtree(newFuzzedKey)
 			if p == 0 {
 				curr.SetNE(&newNode)
