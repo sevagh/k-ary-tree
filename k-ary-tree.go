@@ -15,14 +15,14 @@ package karytree
 // when it's traversed. The key is for data stored in the node.
 type Node struct {
 	key         interface{}
+	parent      *Node
 	firstChild  *Node
 	nextSibling *Node
+	n           int
 }
 
 // New creates a new node with k = k and data key. []*Node children
 // is an uninitialized slice.
-//
-// Don't use nil keys, these are used as a sentinel in the library.
 func New(k int, key interface{}) Node {
 	n := Node{}
 	n.key = key
@@ -40,63 +40,100 @@ func (k *Node) K() int {
 // SetNthChild sets the Nth child. If an existing node is replaced,
 // that node is returned.
 func (k *Node) SetNthChild(n int, other *Node) *Node {
-	if n == 0 {
-		ret := k.firstChild
-		k.firstChild = other
-		if ret != nil {
-			k.firstChild.nextSibling = ret.nextSibling
-		}
-		return ret
+	if other.parent != nil {
+		panic("node already has a parent")
 	}
+
+	other.n = n
+	other.parent = k
 
 	if k.firstChild == nil {
-		next := New(0, nil)
-		k.firstChild = &next
+		k.firstChild = other
+		return nil
 	}
-	curr := k.firstChild
 
-	for nLocal := 1; nLocal != n; nLocal++ {
-		if curr.nextSibling == nil {
-			next := New(0, nil)
-			curr.nextSibling = &next
+	if n == 0 {
+		if k.firstChild.n > n {
+			// relink
+			other.nextSibling = k.firstChild
+			k.firstChild = other
+			return nil
+		} else if k.firstChild.n == n {
+			// evict
+			other.nextSibling = k.firstChild.nextSibling
+			ret := k.firstChild
+			ret.parent = nil //unparent it
+			k.firstChild = other
+			return ret
 		}
+	}
+
+	if k.firstChild.n == n {
+		// evict
+		ret := k.firstChild
+		other.nextSibling = k.firstChild.nextSibling
+		k.firstChild = other
+		ret.parent = nil //unparent it
+		return ret
+	} else if k.firstChild.n > n {
+		// relink
+		other.nextSibling = k.firstChild
+		k.firstChild = other
+		return nil
+	}
+
+	curr := k.firstChild
+	for {
+		if curr.nextSibling == nil {
+			curr.nextSibling = other
+			return nil
+		}
+		if curr.nextSibling.n == n {
+			/* evict the existing nth child
+
+			 *       other
+			 * curr -> nextSibling -> ...
+			 *
+			 * curr -> other -> ..., return nextSibling
+			 */
+			other.nextSibling = curr.nextSibling.nextSibling
+			curr.nextSibling.nextSibling = nil // wipe the rest of the links from the evicted node
+			ret := curr.nextSibling
+			curr.nextSibling = other
+			ret.parent = nil //unparent the evicted node
+			return ret
+		} else if curr.nextSibling.n > n {
+			/* relink
+			 *       other
+			 * curr -> nextSibling
+			 *
+			 * curr -> other -> nextSibling
+			 */
+			other.nextSibling = curr.nextSibling
+			curr.nextSibling = other
+			return nil
+		}
+		// keep traversing the sibling linkedlist
 		curr = curr.nextSibling
 	}
-
-	ret := curr.nextSibling
-	curr.nextSibling = other
-	if ret != nil {
-		curr.nextSibling.nextSibling = ret.nextSibling
-	}
-	return ret
 }
 
 // NthChild gets the Nth child.
 func (k *Node) NthChild(n int) *Node {
-	if n == 0 {
-		if k.firstChild != nil && k.firstChild.key == nil {
-			return nil // this is our own sentinel
-		}
-		return k.firstChild
-	}
-
-	if k.firstChild == nil {
-		return nil
-	}
 	curr := k.firstChild
-
-	for nLocal := 1; nLocal != n; nLocal++ {
-		if curr.nextSibling == nil {
+	for curr != nil {
+		if curr.n == n {
+			// exact match
+			return curr
+		} else if curr.n > n {
+			// overshoot, nth child doesn't exist
 			return nil
 		}
+		// keep traversing the sibling linkedlist
 		curr = curr.nextSibling
 	}
 
-	ret := curr.nextSibling
-	if ret != nil && ret.key == nil {
-		return nil
-	}
-	return ret
+	return nil
 }
 
 // Key gets the data stored in a node

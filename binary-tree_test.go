@@ -158,13 +158,6 @@ func TestTreeEquals(t *testing.T) {
 		t.Errorf("contents of a and aPrime are the same")
 	}
 
-	a.SetRight(&aPrime)
-	b.SetLeft(&aPrime)
-
-	if !karytree.Equals(b.Left(), a.Right()) {
-		t.Errorf("subtree compare problems")
-	}
-
 	c := karytree.Binary("c")
 	cc := karytree.Binary("cc")
 	c.SetLeft(&cc)
