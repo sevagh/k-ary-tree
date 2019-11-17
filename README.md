@@ -1,6 +1,6 @@
 # k-ary-tree
 
-A sibling-sibling k-ary tree. [This blog post](https://blog.mozilla.org/nnethercote/2012/03/07/n-ary-trees-in-c/) has a neat visualization of the firstChild/nextSibling tree structure:
+A child-sibling k-ary tree. [This blog post](https://blog.mozilla.org/nnethercote/2012/03/07/n-ary-trees-in-c/) has a neat visualization of the firstChild/nextSibling tree structure:
 
 ```
        ---
@@ -20,6 +20,16 @@ A sibling-sibling k-ary tree. [This blog post](https://blog.mozilla.org/nnetherc
 | e | --- | f |            ---
  ---       ---
 ```
+
+Advantages include simple traversals and tree operations, e.g. in a BFS:
+
+```go
+next := curr.firstChild
+for next != nil {
+    queue = append(queue, next)
+    next = next.nextSibling
+}
+``` 
 
 A karytree.Node is defined as:
 
@@ -75,3 +85,39 @@ I use the top 16 bits of the parent uintptr to store the `n` value of a child. O
 * This should limit the k of our k-ary-tree to 65536 - who could ever need more than that?
 
 The `key` stores any data the user wants. Nodes have a parent pointer and the library panics on re-parenting nodes with parents. It's a very "manual" library - you're expected to manage nodes, create links, etc. yourself.
+
+### Traversals
+
+I simulate Python generators with channels in Go, inspired by [this](https://blog.carlmjohnson.net/post/on-using-go-channels-like-python-generators/). Let's look at the simplest - the BFS:
+
+```go
+func BFS(root *Node, quit <-chan struct{}) <-chan *Node {
+	nChan := make(chan *Node)
+
+	go func() {
+		defer close(nChan)
+		queue := []*Node{root}
+		var curr *Node
+
+		for len(queue) > 0 {
+			curr, queue = queue[0], queue[1:]
+
+			select {
+			case <-quit:
+				return
+			case nChan <- curr:
+			}
+
+			next := curr.firstChild
+			for next != nil {
+				queue = append(queue, next)
+				next = next.nextSibling
+			}
+		}
+	}()
+
+	return nChan
+}
+```
+
+The channel-based goroutine tricks are there to "suspend and resume" the execution of the function like a Python generator. The recursive traversals are implemented using the visitor pattern.

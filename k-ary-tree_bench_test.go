@@ -15,13 +15,10 @@ func BenchmarkKaryTreeK2Sparse(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		tree = karyTreeKSparseHelper(2)
 
-		// stop the timer, compare trees
-		b.StopTimer()
 		if !karytree.Equals(&tree, &prevTree) {
 			b.Errorf("Benching Sparse K=2 small trees but I don't think they're identical...")
 		}
 		prevTree = tree
-		b.StartTimer()
 	}
 }
 
@@ -34,13 +31,10 @@ func BenchmarkKaryTreeK2VerySparse(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		tree = karyTreeKVerySparseHelper(2)
 
-		// stop the timer, compare trees
-		b.StopTimer()
 		if !karytree.Equals(&tree, &prevTree) {
 			b.Errorf("Benching VerySparse K=2 small trees but I don't think they're identical...")
 		}
 		prevTree = tree
-		b.StartTimer()
 	}
 }
 
@@ -53,13 +47,10 @@ func BenchmarkKaryTreeK2Complete(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		tree = karyTreeKCompleteHelper(2)
 
-		// stop the timer, compare trees
-		b.StopTimer()
 		if !karytree.Equals(&tree, &prevTree) {
 			b.Errorf("Benching Complete K=2 small trees but I don't think they're identical...")
 		}
 		prevTree = tree
-		b.StartTimer()
 	}
 }
 
@@ -72,13 +63,10 @@ func BenchmarkKaryTreeK8Sparse(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		tree = karyTreeKSparseHelper(8)
 
-		// stop the timer, compare trees
-		b.StopTimer()
 		if !karytree.Equals(&tree, &prevTree) {
 			b.Errorf("Benching Sparse K=8 small trees but I don't think they're identical...")
 		}
 		prevTree = tree
-		b.StartTimer()
 	}
 }
 
@@ -91,13 +79,10 @@ func BenchmarkKaryTreeK8VerySparse(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		tree = karyTreeKVerySparseHelper(8)
 
-		// stop the timer, compare trees
-		b.StopTimer()
 		if !karytree.Equals(&tree, &prevTree) {
 			b.Errorf("Benching VerySparse K=8 small trees but I don't think they're identical...")
 		}
 		prevTree = tree
-		b.StartTimer()
 	}
 }
 
@@ -110,13 +95,10 @@ func BenchmarkKaryTreeK8Complete(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		tree = karyTreeKCompleteHelper(8)
 
-		// stop the timer, compare trees
-		b.StopTimer()
 		if !karytree.Equals(&tree, &prevTree) {
 			b.Errorf("Benching Complete K=8 small trees but I don't think they're identical...")
 		}
 		prevTree = tree
-		b.StartTimer()
 	}
 }
 
@@ -129,13 +111,10 @@ func BenchmarkKaryTreeK32Sparse(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		tree = karyTreeKSparseHelper(32)
 
-		// stop the timer, compare trees
-		b.StopTimer()
 		if !karytree.Equals(&tree, &prevTree) {
 			b.Errorf("Benching Sparse K=32 small trees but I don't think they're identical...")
 		}
 		prevTree = tree
-		b.StartTimer()
 	}
 }
 
@@ -148,13 +127,10 @@ func BenchmarkKaryTreeK32VerySparse(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		tree = karyTreeKVerySparseHelper(32)
 
-		// stop the timer, compare trees
-		b.StopTimer()
 		if !karytree.Equals(&tree, &prevTree) {
 			b.Errorf("Benching VerySparse K=32 small trees but I don't think they're identical...")
 		}
 		prevTree = tree
-		b.StartTimer()
 	}
 }
 
@@ -167,13 +143,10 @@ func BenchmarkKaryTreeK32Complete(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		tree = karyTreeKCompleteHelper(32)
 
-		// stop the timer, compare trees
-		b.StopTimer()
 		if !karytree.Equals(&tree, &prevTree) {
 			b.Errorf("Benching Complete K=32 small trees but I don't think they're identical...")
 		}
 		prevTree = tree
-		b.StartTimer()
 	}
 }
 
