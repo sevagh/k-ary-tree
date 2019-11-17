@@ -13,8 +13,15 @@ package karytree
 
 import (
 	"github.com/cheekybits/genny/generic"
-	"unsafe"
+	//"unsafe"
+	//"fmt"
 )
+
+//var (
+//	nBitmask uintptr = 0xFFFF000000000000
+//	firstChildBitmask uintptr = 0x0000FFFFFFFFFFFF
+//	nBitshift uint16 = 48
+//)
 
 type KeyType generic.Type
 
@@ -22,7 +29,7 @@ type KeyType generic.Type
 // when it's traversed. The key is for data stored in the node.
 type Node struct {
 	key         KeyType
-	parent      uintptr
+	n_			uint16
 	firstChild  *Node
 	nextSibling *Node
 }
@@ -35,47 +42,50 @@ func NewNode(key KeyType) Node {
 }
 
 func (k *Node) n() uint16 {
-	return uint16((k.parent & 0xFFFF000000000000) >> 48)
+	//return uint16((k.firstChild & nBitmask) >> nBitshift)
+	return k.n_
 }
 
-// Parent gets a pointer to the parent of a Node.
-func (k *Node) Parent() *Node {
-	return (*Node)(unsafe.Pointer(k.parent & 0x0000FFFFFFFFFFFF))
+func (k *Node) setN(n uint16) {
+	//k.firstChild = (k.firstChild & firstChildBitmask) | (uintptr(n) << nBitshift)
+	k.n_ = n
 }
 
-func (k *Node) setParent(n uint16, child *Node) {
-	k.parent = uintptr(unsafe.Pointer(child)) | (uintptr(n) << 48)
+func (k *Node) getFirstChild() *Node {
+	//return (*Node)(unsafe.Pointer(k.firstChild & firstChildBitmask))
+	return k.firstChild
+}
+
+func (k *Node) setFirstChild(child *Node) {
+	//k.firstChild = (k.firstChild & nBitmask) | uintptr(unsafe.Pointer(child))
+	k.firstChild = child
 }
 
 // SetNthChild sets the Nth child. If an existing node is replaced,
 // that node is returned.
 func (k *Node) SetNthChild(n uint16, other *Node) *Node {
-	//use top 16 bits of pointer to store 'n'
-	if other.Parent() != nil {
-		panic("same node can't have different parents")
-	}
-	other.setParent(n, k)
+	//use top 16 bits of firstChild pointer to store 'n'
+	other.setN(n)
 
-	if k.firstChild == nil {
-		k.firstChild = other
+	if k.getFirstChild() == nil {
+		k.setFirstChild(other)
 		return nil
 	}
 
-	if k.firstChild.n() == n {
+	if k.getFirstChild().n() == n {
 		// evict
-		ret := k.firstChild
-		other.nextSibling = k.firstChild.nextSibling
-		k.firstChild = other
-		ret.setParent(0, nil)
+		ret := k.getFirstChild()
+		other.nextSibling = k.getFirstChild().nextSibling
+		k.setFirstChild(other)
 		return ret
-	} else if k.firstChild.n() > n {
+	} else if k.getFirstChild().n() > n {
 		// relink
-		other.nextSibling = k.firstChild
-		k.firstChild = other
+		other.nextSibling = k.getFirstChild()
+		k.setFirstChild(other)
 		return nil
 	}
 
-	curr := k.firstChild
+	curr := k.getFirstChild()
 	for {
 		if curr.nextSibling == nil {
 			curr.nextSibling = other
@@ -93,7 +103,6 @@ func (k *Node) SetNthChild(n uint16, other *Node) *Node {
 			curr.nextSibling.nextSibling = nil // wipe the rest of the links from the evicted node
 			ret := curr.nextSibling
 			curr.nextSibling = other
-			ret.setParent(0, nil)
 			return ret
 		} else if curr.nextSibling.n() > n {
 			/* relink
@@ -113,7 +122,7 @@ func (k *Node) SetNthChild(n uint16, other *Node) *Node {
 
 // NthChild gets the Nth child.
 func (k *Node) NthChild(n uint16) *Node {
-	curr := k.firstChild
+	curr := k.getFirstChild()
 	for curr != nil {
 		if curr.n() == n {
 			// exact match

@@ -38,13 +38,12 @@ type KeyType generic.Type
 
 type Node struct {
 	key         KeyType
-	parent      uintptr
-	firstChild  *Node
+	firstChild  uintptr
 	nextSibling *Node
 }
 ```
 
-There is a convenience wrapper for a binary tree to implement and demonstrate traversals.
+The code works as if key were an `interface{}`, but by using genny you have the option of generating copies of [k-ary-tree.go](./k-ary-tree.go) with specific KeyTypes for higher performance. E.g. I use a generated copy with `KeyType = uint32` in my [quadtree-compression](https://github.com/sevagh/quadtree-compression) project with good results. There is a convenience wrapper for a binary tree to implement and demonstrate traversals.
 
 ### Sibling list operations
 
@@ -81,12 +80,10 @@ fmt.Println(kary.Equals(&a, &a_))
 // True
 ```
 
-I use the top 16 bits of the parent uintptr to store the `n` value of a child. On amd64 architectures, apparently only 48 bits of 64-bit pointers are used for addressing (I didn't do any thorough research but tests are passing). Two notes:
+I use the top 16 bits of the firstChild uintptr to store the `n` value of a child. On amd64 architectures, apparently only 48 bits of 64-bit pointers are used for addressing (I didn't do any thorough research but tests are passing). Two notes:
 
 * This is highly unrecommended and I use the unsafe package to do it, but I need to spice up my life somehow
 * This should limit the k of our k-ary-tree to 65536 - who could ever need more than that?
-
-The `key` stores any data the user wants. Nodes have a parent pointer and the library panics on re-parenting nodes with parents. It's a very "manual" library - you're expected to manage nodes, create links, etc. yourself.
 
 ### Traversals
 
