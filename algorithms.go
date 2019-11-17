@@ -74,6 +74,4 @@ func Equals(a, b *Node) bool {
 		nextA = nextA.nextSibling
 		nextB = nextB.nextSibling
 	}
-
-	return true
 }

@@ -14,8 +14,6 @@ bench: GO_TEST_FLAGS:=$(GO_BENCH_FLAGS)
 bench: run:=Bench
 bench: runarg:=-bench=
 bench: test
-	go tool pprof -web memprofile.out
-	go tool pprof -web cpuprofile.out
 
 test:
 	go test $(GO_TEST_FLAGS) $(component) $(runarg)$(run)

@@ -112,6 +112,26 @@ func TestNotEqualTrees(t *testing.T) {
 	}
 }
 
+func TestTreeInsertionSortedOrderEquals(t *testing.T) {
+	a := karytree.NewNode("a")
+	b := karytree.NewNode("b")
+	c := karytree.NewNode("c")
+
+	a_ := karytree.NewNode("a")
+	b_ := karytree.NewNode("b")
+	c_ := karytree.NewNode("c")
+
+	a.SetNthChild(4, &b)
+	a.SetNthChild(2, &c)
+
+	a_.SetNthChild(2, &c_)
+	a_.SetNthChild(4, &b_)
+
+	if !karytree.Equals(&a, &a_) {
+		t.Errorf("sibling list sorted order is not working right")
+	}
+}
+
 func constructTree(K int) karytree.Node {
 	var key int
 	tree := karytree.NewNode(key)

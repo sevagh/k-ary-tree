@@ -33,7 +33,7 @@ func (k *Node) n() uint16 {
 	return uint16((k.parent & 0xFFFF000000000000) >> 48)
 }
 
-func (k *Node) getParent() *Node {
+func (k *Node) Parent() *Node {
 	return (*Node)(unsafe.Pointer(k.parent & 0x0000FFFFFFFFFFFF))
 }
 
@@ -45,7 +45,7 @@ func (k *Node) setParent(n uint16, child *Node) {
 // that node is returned.
 func (k *Node) SetNthChild(n uint16, other *Node) *Node {
 	//use top 16 bits of pointer to store 'n'
-	if other.getParent() != nil {
+	if other.Parent() != nil {
 		panic("same node can't have different parents")
 	}
 	other.setParent(n, k)
