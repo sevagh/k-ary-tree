@@ -95,3 +95,60 @@ func TestSiblingTreeNLogic(t *testing.T) {
 		t.Errorf("didn't set this child correctly")
 	}
 }
+
+func TestPanicReparent(t *testing.T) {
+	a := karytree.NewNode("a")
+	b := karytree.NewNode("b")
+	c := karytree.NewNode("c")
+
+	a.SetNthChild(3, &b)
+
+	defer func() {
+		if r := recover(); r == nil {
+			t.Errorf("expected reparenting to panic")
+		}
+	}()
+
+	c.SetNthChild(5, &b)
+}
+
+func TestSetSameChildEvictsFormer(t *testing.T) {
+	a := karytree.NewNode("a")
+	b := karytree.NewNode("b")
+	c := karytree.NewNode("c")
+	d := karytree.NewNode("d")
+
+	a.SetNthChild(4, &b)
+	a.SetNthChild(5, &d)
+	evicted := a.SetNthChild(4, &c)
+
+	if a.NthChild(4).Key().(string) != "c" {
+		t.Errorf("expected new child to be 'c', got '%+v'", a.NthChild(4).Key())
+	}
+
+	if evicted.Key().(string) != "b" {
+		t.Errorf("expected evicted child to be 'b', got '%+v'", evicted.Key())
+	}
+
+	if evicted.Parent() != nil {
+		t.Errorf("expected evicted child to not have a parent, got %+v\n", evicted.Parent())
+	}
+
+	if a.NthChild(4).Parent() != &a {
+		t.Errorf("expected new child 'c' to have parent 'a', got %+v\n", c.Parent())
+	}
+
+	if a.NthChild(5) != &d {
+		t.Errorf("evicted node's siblings weren't inherited")
+	}
+
+	e := karytree.NewNode("e")
+	f := karytree.NewNode("f")
+
+	a.SetNthChild(6, &e)
+	evicted = a.SetNthChild(6, &f)
+
+	if evicted.Parent() != nil {
+		t.Errorf("expected evicted sibling to not have parent, got %+v\n", evicted.Parent())
+	}
+}

@@ -22,8 +22,8 @@ fmt:
 	go fmt $(component)
 
 lint:
-	go vet $(component)
-	golint $(component)
+	-go vet $(component)
+	-golint $(component)
 
 deps:
 	go get -u golang.org/x/lint/golint

@@ -67,10 +67,6 @@ func Equals(a, b *Node) bool {
 			return true
 		}
 
-		if nextA.n() != nextB.n() {
-			return false
-		}
-
 		nextA = nextA.nextSibling
 		nextB = nextB.nextSibling
 	}

@@ -33,6 +33,7 @@ func (k *Node) n() uint16 {
 	return uint16((k.parent & 0xFFFF000000000000) >> 48)
 }
 
+// Parent gets a pointer to the parent of a Node.
 func (k *Node) Parent() *Node {
 	return (*Node)(unsafe.Pointer(k.parent & 0x0000FFFFFFFFFFFF))
 }
@@ -55,26 +56,12 @@ func (k *Node) SetNthChild(n uint16, other *Node) *Node {
 		return nil
 	}
 
-	if n == 0 {
-		if k.firstChild.n() > n {
-			// relink
-			other.nextSibling = k.firstChild
-			k.firstChild = other
-			return nil
-		} else if k.firstChild.n() == n {
-			// evict
-			other.nextSibling = k.firstChild.nextSibling
-			ret := k.firstChild
-			k.firstChild = other
-			return ret
-		}
-	}
-
 	if k.firstChild.n() == n {
 		// evict
 		ret := k.firstChild
 		other.nextSibling = k.firstChild.nextSibling
 		k.firstChild = other
+		ret.setParent(0, nil)
 		return ret
 	} else if k.firstChild.n() > n {
 		// relink
@@ -101,6 +88,7 @@ func (k *Node) SetNthChild(n uint16, other *Node) *Node {
 			curr.nextSibling.nextSibling = nil // wipe the rest of the links from the evicted node
 			ret := curr.nextSibling
 			curr.nextSibling = other
+			ret.setParent(0, nil)
 			return ret
 		} else if curr.nextSibling.n() > n {
 			/* relink
