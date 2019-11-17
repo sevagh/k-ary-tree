@@ -11,19 +11,20 @@ for in-range indexing (e.g. don't set a 5th child of a k=3 node).
 */
 package karytree
 
+import "unsafe"
+
 // A Node is a typical recursive tree node, and it represents a tree
 // when it's traversed. The key is for data stored in the node.
 type Node struct {
 	key         interface{}
-	parent      *Node
+	parent      uintptr
 	firstChild  *Node
 	nextSibling *Node
-	n           int
 }
 
-// New creates a new node with k = k and data key. []*Node children
+// NewNode creates a new node with k = k and data key. []*Node children
 // is an uninitialized slice.
-func New(k int, key interface{}) Node {
+func NewNode(k int, key interface{}) Node {
 	n := Node{}
 	n.key = key
 	return n
@@ -37,15 +38,26 @@ func (k *Node) K() int {
 	return 0
 }
 
+func (k *Node) n() uint16 {
+	return uint16((k.parent & 0xFFFF000000000000) >> 48)
+}
+
+func (k *Node) getParent() *Node {
+	return (*Node)(unsafe.Pointer(k.parent & 0x0000FFFFFFFFFFFF))
+}
+
+func (k *Node) setParent(n uint16, child *Node) {
+	k.parent = uintptr(unsafe.Pointer(child)) | (uintptr(n) << 48)
+}
+
 // SetNthChild sets the Nth child. If an existing node is replaced,
 // that node is returned.
-func (k *Node) SetNthChild(n int, other *Node) *Node {
-	if other.parent != nil {
-		panic("node already has a parent")
+func (k *Node) SetNthChild(n uint16, other *Node) *Node {
+	//use top 16 bits of pointer to store 'n'
+	if other.getParent() != nil {
+		panic("same node can't have different parents")
 	}
-
-	other.n = n
-	other.parent = k
+	other.setParent(n, k)
 
 	if k.firstChild == nil {
 		k.firstChild = other
@@ -62,18 +74,16 @@ func (k *Node) SetNthChild(n int, other *Node) *Node {
 			// evict
 			other.nextSibling = k.firstChild.nextSibling
 			ret := k.firstChild
-			ret.parent = nil //unparent it
 			k.firstChild = other
 			return ret
 		}
 	}
 
-	if k.firstChild.n == n {
+	if k.firstChild.n() == n {
 		// evict
 		ret := k.firstChild
 		other.nextSibling = k.firstChild.nextSibling
 		k.firstChild = other
-		ret.parent = nil //unparent it
 		return ret
 	} else if k.firstChild.n > n {
 		// relink
@@ -88,7 +98,7 @@ func (k *Node) SetNthChild(n int, other *Node) *Node {
 			curr.nextSibling = other
 			return nil
 		}
-		if curr.nextSibling.n == n {
+		if curr.nextSibling.n() == n {
 			/* evict the existing nth child
 
 			 *       other
@@ -100,7 +110,6 @@ func (k *Node) SetNthChild(n int, other *Node) *Node {
 			curr.nextSibling.nextSibling = nil // wipe the rest of the links from the evicted node
 			ret := curr.nextSibling
 			curr.nextSibling = other
-			ret.parent = nil //unparent the evicted node
 			return ret
 		} else if curr.nextSibling.n > n {
 			/* relink
@@ -119,10 +128,10 @@ func (k *Node) SetNthChild(n int, other *Node) *Node {
 }
 
 // NthChild gets the Nth child.
-func (k *Node) NthChild(n int) *Node {
+func (k *Node) NthChild(n uint16) *Node {
 	curr := k.firstChild
 	for curr != nil {
-		if curr.n == n {
+		if curr.n() == n {
 			// exact match
 			return curr
 		} else if curr.n > n {

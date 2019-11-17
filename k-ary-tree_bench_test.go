@@ -182,31 +182,31 @@ func karyTreeKSparseHelper(K int) karytree.Node {
 
 	var key int
 
-	tree = karytree.New(K, key)
+	tree = karytree.NewNode(K, key)
 	key++
 
 	var curr *karytree.Node
 	curr = &tree
 
-	for i := 0; i < K; i++ {
+	for i := uint16(0); i < uint16(K); i++ {
 		if i%2 == 0 {
-			child := karytree.New(K, key)
+			child := karytree.NewNode(K, key)
 			key++
 
 			// fill even children
 			curr.SetNthChild(i, &child)
-			for j := 0; j < K; j++ {
+			for j := uint16(0); j < uint16(K); j++ {
 				if j%2 != 0 {
-					grandchild := karytree.New(K, key)
+					grandchild := karytree.NewNode(K, key)
 					key++
 					ith := curr.NthChild(i)
 
 					// fill odd grandchildren
 					ith.SetNthChild(j, &grandchild)
-					for k := 0; k < K; k++ {
+					for k := uint16(0); k < uint16(K); k++ {
 						if k%2 == 0 {
 							// fill even great grandchildren
-							greatgrandchild := karytree.New(K, key)
+							greatgrandchild := karytree.NewNode(K, key)
 							key++
 							jth := ith.NthChild(j)
 
@@ -226,24 +226,24 @@ func karyTreeKCompleteHelper(K int) karytree.Node {
 
 	var key int
 
-	tree = karytree.New(K, key)
+	tree = karytree.NewNode(K, key)
 	key++
 
 	var curr *karytree.Node
 	curr = &tree
 
-	for i := 0; i < K; i++ {
-		child := karytree.New(K, key)
+	for i := uint16(0); i < uint16(K); i++ {
+		child := karytree.NewNode(K, key)
 		key++
 		curr.SetNthChild(i, &child)
-		for j := 0; j < K; j++ {
-			grandchild := karytree.New(K, key)
+		for j := uint16(0); j < uint16(K); j++ {
+			grandchild := karytree.NewNode(K, key)
 			key++
 
 			ith := curr.NthChild(i)
 			ith.SetNthChild(j, &grandchild)
-			for k := 0; k < K; k++ {
-				greatgrandchild := karytree.New(K, key)
+			for k := uint16(0); k < uint16(K); k++ {
+				greatgrandchild := karytree.NewNode(K, key)
 				key++
 
 				jth := ith.NthChild(j)
@@ -260,31 +260,31 @@ func karyTreeKVerySparseHelper(K int) karytree.Node {
 
 	var key int
 
-	tree = karytree.New(K, key)
+	tree = karytree.NewNode(K, key)
 	key++
 
 	var curr *karytree.Node
 	curr = &tree
 
-	for i := 0; i < K; i++ {
+	for i := uint16(0); i < uint16(K); i++ {
 		if i == 0 {
-			child := karytree.New(K, key)
+			child := karytree.NewNode(K, key)
 			key++
 
 			// fill even children
 			curr.SetNthChild(i, &child)
-			for j := 0; j < K; j++ {
+			for j := uint16(0); j < uint16(K); j++ {
 				if j == 0 {
-					grandchild := karytree.New(K, key)
+					grandchild := karytree.NewNode(K, key)
 					key++
 					ith := curr.NthChild(i)
 
 					// fill odd grandchildren
 					ith.SetNthChild(j, &grandchild)
-					for k := 0; k < K; k++ {
+					for k := uint16(0); k < uint16(K); k++ {
 						if k == 0 {
 							// fill even great grandchildren
-							greatgrandchild := karytree.New(K, key)
+							greatgrandchild := karytree.NewNode(K, key)
 							key++
 							jth := ith.NthChild(j)
 

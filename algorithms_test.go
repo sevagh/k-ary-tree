@@ -9,10 +9,10 @@ import (
 func TestBFS(t *testing.T) {
 	//k = 1 == we basically have a linked list
 
-	a := karytree.New(1, "a")
-	b := karytree.New(1, "b")
-	c := karytree.New(1, "c")
-	d := karytree.New(1, "d")
+	a := karytree.NewNode(1, "a")
+	b := karytree.NewNode(1, "b")
+	c := karytree.NewNode(1, "c")
+	d := karytree.NewNode(1, "d")
 
 	a.SetNthChild(0, &b)
 	b.SetNthChild(0, &c)
@@ -41,10 +41,10 @@ func TestBFS(t *testing.T) {
 func TestBFSEarlyQuit(t *testing.T) {
 	//k = 1 == we basically have a linked list
 
-	a := karytree.New(1, "a")
-	b := karytree.New(1, "b")
-	c := karytree.New(1, "c")
-	d := karytree.New(1, "d")
+	a := karytree.NewNode(1, "a")
+	b := karytree.NewNode(1, "b")
+	c := karytree.NewNode(1, "c")
+	d := karytree.NewNode(1, "d")
 
 	a.SetNthChild(0, &b)
 	b.SetNthChild(0, &c)
@@ -105,7 +105,7 @@ func TestNotEqualTrees(t *testing.T) {
 	tree2 := constructTree(8)
 
 	x := tree2.NthChild(3)
-	rand := karytree.New(x.K(), "hello world")
+	rand := karytree.NewNode(x.K(), "hello world")
 	tree2.SetNthChild(3, &rand)
 
 	if karytree.Equals(&tree1, &tree2) {
@@ -115,23 +115,23 @@ func TestNotEqualTrees(t *testing.T) {
 
 func constructTree(K int) karytree.Node {
 	var key int
-	tree := karytree.New(K, key)
+	tree := karytree.NewNode(K, key)
 	key++
 
 	var curr *karytree.Node
 	curr = &tree
 
-	for k := 0; k < K; k++ {
-		child := karytree.New(K, key)
+	for k := uint16(0); k < uint16(K); k++ {
+		child := karytree.NewNode(K, key)
 		key++
 		curr.SetNthChild(k, &child)
-		for l := 0; l < K; l++ {
-			grandchild := karytree.New(K, key)
+		for l := uint16(0); l < uint16(K); l++ {
+			grandchild := karytree.NewNode(K, key)
 			key++
 			nth := curr.NthChild(k)
 			nth.SetNthChild(l, &grandchild)
-			for m := 0; m < K; m++ {
-				greatgrandchild := karytree.New(K, key)
+			for m := uint16(0); m < uint16(K); m++ {
+				greatgrandchild := karytree.NewNode(K, key)
 				key++
 
 				grandnth := nth.NthChild(l)
@@ -148,31 +148,31 @@ func constructTreeSparse(K int) karytree.Node {
 
 	var key int
 
-	tree = karytree.New(K, key)
+	tree = karytree.NewNode(K, key)
 	key++
 
 	var curr *karytree.Node
 	curr = &tree
 
-	for i := 0; i < K; i++ {
+	for i := uint16(0); i < uint16(K); i++ {
 		if i%2 == 0 {
-			child := karytree.New(K, key)
+			child := karytree.NewNode(K, key)
 			key++
 
 			// fill even children
 			curr.SetNthChild(i, &child)
-			for j := 0; j < K; j++ {
+			for j := uint16(0); j < uint16(K); j++ {
 				if j%2 != 0 {
-					grandchild := karytree.New(K, key)
+					grandchild := karytree.NewNode(K, key)
 					key++
 					ith := curr.NthChild(i)
 
 					// fill odd grandchildren
 					ith.SetNthChild(j, &grandchild)
-					for k := 0; k < K; k++ {
+					for k := uint16(0); k < uint16(K); k++ {
 						if k%2 == 0 {
 							// fill even great grandchildren
-							greatgrandchild := karytree.New(K, key)
+							greatgrandchild := karytree.NewNode(K, key)
 							key++
 							jth := ith.NthChild(j)
 

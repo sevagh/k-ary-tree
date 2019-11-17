@@ -8,11 +8,11 @@ import (
 
 func ExampleNode() {
 	key := 0
-	tree := karytree.New(16, key)
+	tree := karytree.NewNode(16, key)
 	key++
 
-	for i := 0; i < 16; i++ {
-		newNode := karytree.New(16, key)
+	for i := uint16(0); i < uint16(16); i++ {
+		newNode := karytree.NewNode(16, key)
 		key++
 		tree.SetNthChild(i, &newNode)
 	}

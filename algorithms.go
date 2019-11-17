@@ -47,14 +47,14 @@ func Equals(a, b *Node) bool {
 		return false
 	}
 
-	if a.n != b.n || a.Key() != b.Key() {
+	if a.n() != b.n() || a.Key() != b.Key() {
 		return false
 	}
 
 	nextA := a.firstChild
 	nextB := b.firstChild
 
-	if (nextA != nil && nextB != nil) && nextA.n != nextB.n {
+	if (nextA != nil && nextB != nil) && nextA.n() != nextB.n() {
 		return false
 	}
 
@@ -67,7 +67,7 @@ func Equals(a, b *Node) bool {
 			return true
 		}
 
-		if nextA.n != nextB.n {
+		if nextA.n() != nextB.n() {
 			return false
 		}
 
