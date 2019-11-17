@@ -34,15 +34,17 @@ for next != nil {
 A karytree.Node is defined as:
 
 ```go
+type KeyType generic.Type
+
 type Node struct {
-	key         interface{}
+	key         KeyType
 	parent      uintptr
 	firstChild  *Node
 	nextSibling *Node
 }
 ```
 
-There are convenience wrappers for binary trees and region quadtrees (as many trees are specialized forms of k-ary-trees).
+There is a convenience wrapper for a binary tree to implement and demonstrate traversals.
 
 ### Sibling list operations
 
