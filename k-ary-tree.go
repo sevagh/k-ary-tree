@@ -11,25 +11,16 @@ for in-range indexing (e.g. don't set a 5th child of a k=3 node).
 */
 package karytree
 
-import (
-	"github.com/cheekybits/genny/generic"
-	//"unsafe"
-	//"fmt"
-)
+import "github.com/cheekybits/genny/generic"
 
-//var (
-//	nBitmask uintptr = 0xFFFF000000000000
-//	firstChildBitmask uintptr = 0x0000FFFFFFFFFFFF
-//	nBitshift uint16 = 48
-//)
-
+// KeyType is for generating specific trees with genny
 type KeyType generic.Type
 
 // A Node is a typical recursive tree node, and it represents a tree
 // when it's traversed. The key is for data stored in the node.
 type Node struct {
 	key         KeyType
-	n_			uint16
+	n           uint
 	firstChild  *Node
 	nextSibling *Node
 }
@@ -41,57 +32,37 @@ func NewNode(key KeyType) Node {
 	return n
 }
 
-func (k *Node) n() uint16 {
-	//return uint16((k.firstChild & nBitmask) >> nBitshift)
-	return k.n_
-}
-
-func (k *Node) setN(n uint16) {
-	//k.firstChild = (k.firstChild & firstChildBitmask) | (uintptr(n) << nBitshift)
-	k.n_ = n
-}
-
-func (k *Node) getFirstChild() *Node {
-	//return (*Node)(unsafe.Pointer(k.firstChild & firstChildBitmask))
-	return k.firstChild
-}
-
-func (k *Node) setFirstChild(child *Node) {
-	//k.firstChild = (k.firstChild & nBitmask) | uintptr(unsafe.Pointer(child))
-	k.firstChild = child
-}
-
 // SetNthChild sets the Nth child. If an existing node is replaced,
 // that node is returned.
-func (k *Node) SetNthChild(n uint16, other *Node) *Node {
+func (k *Node) SetNthChild(n uint, other *Node) *Node {
 	//use top 16 bits of firstChild pointer to store 'n'
-	other.setN(n)
+	other.n = n
 
-	if k.getFirstChild() == nil {
-		k.setFirstChild(other)
+	if k.firstChild == nil {
+		k.firstChild = other
 		return nil
 	}
 
-	if k.getFirstChild().n() == n {
+	if k.firstChild.n == n {
 		// evict
-		ret := k.getFirstChild()
-		other.nextSibling = k.getFirstChild().nextSibling
-		k.setFirstChild(other)
+		ret := k.firstChild
+		other.nextSibling = k.firstChild.nextSibling
+		k.firstChild = other
 		return ret
-	} else if k.getFirstChild().n() > n {
+	} else if k.firstChild.n > n {
 		// relink
-		other.nextSibling = k.getFirstChild()
-		k.setFirstChild(other)
+		other.nextSibling = k.firstChild
+		k.firstChild = other
 		return nil
 	}
 
-	curr := k.getFirstChild()
+	curr := k.firstChild
 	for {
 		if curr.nextSibling == nil {
 			curr.nextSibling = other
 			return nil
 		}
-		if curr.nextSibling.n() == n {
+		if curr.nextSibling.n == n {
 			/* evict the existing nth child
 
 			 *       other
@@ -104,7 +75,7 @@ func (k *Node) SetNthChild(n uint16, other *Node) *Node {
 			ret := curr.nextSibling
 			curr.nextSibling = other
 			return ret
-		} else if curr.nextSibling.n() > n {
+		} else if curr.nextSibling.n > n {
 			/* relink
 			 *       other
 			 * curr -> nextSibling
@@ -121,13 +92,13 @@ func (k *Node) SetNthChild(n uint16, other *Node) *Node {
 }
 
 // NthChild gets the Nth child.
-func (k *Node) NthChild(n uint16) *Node {
-	curr := k.getFirstChild()
+func (k *Node) NthChild(n uint) *Node {
+	curr := k.firstChild
 	for curr != nil {
-		if curr.n() == n {
+		if curr.n == n {
 			// exact match
 			return curr
-		} else if curr.n() > n {
+		} else if curr.n > n {
 			// overshoot, nth child doesn't exist
 			return nil
 		}

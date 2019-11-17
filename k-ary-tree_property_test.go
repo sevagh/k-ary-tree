@@ -12,7 +12,7 @@ import (
 
 type karytreeMachine struct {
 	r     karytree.Node
-	path  [][]uint16
+	path  [][]uint
 	state []interface{}
 }
 
@@ -97,7 +97,7 @@ func (m *karytreeMachine) Get(t *rapid.T) {
 
 func (m *karytreeMachine) Put(t *rapid.T) {
 	// can't set nth child > k for a k-ary tree
-	path := rapid.SlicesOf(rapid.Uint16sRange(0, ^uint16(0))).Draw(t, "nthChild").([]uint16)
+	path := rapid.SlicesOf(rapid.UintsRange(0, ^uint(0))).Draw(t, "nthChild").([]uint)
 
 	var curr *karytree.Node
 	var lastFuzzedKey interface{}
@@ -119,7 +119,7 @@ func (m *karytreeMachine) Put(t *rapid.T) {
 	}
 
 	m.state = append([]interface{}{lastFuzzedKey}, m.state...)
-	m.path = append([][]uint16{path}, m.path...)
+	m.path = append([][]uint{path}, m.path...)
 
 	t.Logf("paths %+v\n", m.path)
 	t.Logf("state %+v\n", m.state)

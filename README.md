@@ -38,7 +38,8 @@ type KeyType generic.Type
 
 type Node struct {
 	key         KeyType
-	firstChild  uintptr
+    n           uint
+	firstChild  *Node
 	nextSibling *Node
 }
 ```
@@ -80,10 +81,7 @@ fmt.Println(kary.Equals(&a, &a_))
 // True
 ```
 
-I use the top 16 bits of the firstChild uintptr to store the `n` value of a child. On amd64 architectures, apparently only 48 bits of 64-bit pointers are used for addressing (I didn't do any thorough research but tests are passing). Two notes:
-
-* This is highly unrecommended and I use the unsafe package to do it, but I need to spice up my life somehow
-* This should limit the k of our k-ary-tree to 65536 - who could ever need more than that?
+The field `n` determines which child a node is. It's a `uint` which gives us plenty of headroom.
 
 ### Traversals
 

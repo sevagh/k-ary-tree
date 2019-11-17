@@ -21,7 +21,7 @@ func BFS(root *Node, quit <-chan struct{}) <-chan *Node {
 			case nChan <- curr:
 			}
 
-			next := curr.getFirstChild()
+			next := curr.firstChild
 			for next != nil {
 				queue = append(queue, next)
 				next = next.nextSibling
@@ -47,14 +47,14 @@ func Equals(a, b *Node) bool {
 		return false
 	}
 
-	if a.n() != b.n() || a.Key() != b.Key() {
+	if a.n != b.n || a.Key() != b.Key() {
 		return false
 	}
 
-	nextA := a.getFirstChild()
-	nextB := b.getFirstChild()
+	nextA := a.firstChild
+	nextB := b.firstChild
 
-	if (nextA != nil && nextB != nil) && nextA.n() != nextB.n() {
+	if (nextA != nil && nextB != nil) && nextA.n != nextB.n {
 		return false
 	}
 

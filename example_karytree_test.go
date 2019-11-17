@@ -11,7 +11,7 @@ func ExampleNode() {
 	tree := karytree.NewNode(key)
 	key++
 
-	for i := uint16(0); i < uint16(16); i++ {
+	for i := uint(0); i < uint(16); i++ {
 		newNode := karytree.NewNode(key)
 		key++
 		tree.SetNthChild(i, &newNode)
