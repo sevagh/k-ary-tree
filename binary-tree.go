@@ -7,7 +7,7 @@ const (
 
 // Binary creates a binary karytree.Node
 func Binary(key interface{}) Node {
-	return NewNode(2, key)
+	return NewNode(key)
 }
 
 // SetLeft sets the left child.

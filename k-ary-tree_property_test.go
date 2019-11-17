@@ -12,7 +12,6 @@ import (
 
 type karytreeMachine struct {
 	r     karytree.Node
-	n     uint16
 	path  [][]uint16
 	state []interface{}
 }
@@ -67,12 +66,8 @@ func getKFuzzedKey() interface{} {
 }
 
 func (m *karytreeMachine) Init(t *rapid.T) {
-	n := rapid.Uint16sRange(1, 20).Draw(t, "n").(uint16)
-
-	m.r = karytree.NewNode(int(n), getKFuzzedKey())
-
-	t.Logf("Created k-ary-tree node with k = %d\n", n)
-	m.n = n
+	m.r = karytree.NewNode(getKFuzzedKey())
+	t.Logf("Created k-ary-tree root node\n")
 }
 
 func (m *karytreeMachine) Get(t *rapid.T) {
@@ -102,7 +97,7 @@ func (m *karytreeMachine) Get(t *rapid.T) {
 
 func (m *karytreeMachine) Put(t *rapid.T) {
 	// can't set nth child > k for a k-ary tree
-	path := rapid.SlicesOf(rapid.Uint16sRange(0, uint16(m.n)-1)).Draw(t, "nthChild").([]uint16)
+	path := rapid.SlicesOf(rapid.Uint16sRange(0, ^uint16(0))).Draw(t, "nthChild").([]uint16)
 
 	var curr *karytree.Node
 	var lastFuzzedKey interface{}
@@ -116,7 +111,7 @@ func (m *karytreeMachine) Put(t *rapid.T) {
 			lastFuzzedKey = curr.Key()
 		} else {
 			newFuzzedKey := getKFuzzedKey()
-			newNode := karytree.NewNode(int(m.n), newFuzzedKey)
+			newNode := karytree.NewNode(newFuzzedKey)
 			curr.SetNthChild(p, &newNode)
 			curr = &newNode
 			lastFuzzedKey = newFuzzedKey

@@ -9,10 +9,10 @@ import (
 func TestBasicLinkedList(t *testing.T) {
 	//k = 1 == we basically have a linked list
 
-	a := karytree.NewNode(1, "a")
-	b := karytree.NewNode(1, "b")
-	c := karytree.NewNode(1, "c")
-	d := karytree.NewNode(1, "d")
+	a := karytree.NewNode("a")
+	b := karytree.NewNode("b")
+	c := karytree.NewNode("c")
+	d := karytree.NewNode("d")
 
 	a.SetNthChild(0, &b)
 	b.SetNthChild(0, &c)
@@ -59,7 +59,7 @@ func TestBasicLinkedList(t *testing.T) {
 }
 
 func TestModifyKey(t *testing.T) {
-	a := karytree.NewNode(1, "a")
+	a := karytree.NewNode("a")
 	if a.Key().(string) != "a" {
 		t.Errorf("key was 'a', should not be %+v\n", a.Key().(string))
 	}
@@ -71,11 +71,11 @@ func TestModifyKey(t *testing.T) {
 }
 
 func TestSiblingTreeNLogic(t *testing.T) {
-	a := karytree.NewNode(1, "a")
-	b := karytree.NewNode(1, "b")
-	c := karytree.NewNode(1, "c")
-	d := karytree.NewNode(1, "d")
-	e := karytree.NewNode(1, "e")
+	a := karytree.NewNode("a")
+	b := karytree.NewNode("b")
+	c := karytree.NewNode("c")
+	d := karytree.NewNode("d")
+	e := karytree.NewNode("e")
 
 	a.SetNthChild(32, &b)
 	a.SetNthChild(5, &c)

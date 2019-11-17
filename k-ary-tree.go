@@ -22,20 +22,11 @@ type Node struct {
 	nextSibling *Node
 }
 
-// NewNode creates a new node with k = k and data key. []*Node children
-// is an uninitialized slice.
-func NewNode(k int, key interface{}) Node {
+// NewNode creates a new node data key.
+func NewNode(key interface{}) Node {
 	n := Node{}
 	n.key = key
 	return n
-}
-
-// K returns the k value of a tree node
-//
-// Deprecated: switched to a sibling-sibling binary tree representation
-// where k is no longer stored.
-func (k *Node) K() int {
-	return 0
 }
 
 func (k *Node) n() uint16 {
@@ -65,12 +56,12 @@ func (k *Node) SetNthChild(n uint16, other *Node) *Node {
 	}
 
 	if n == 0 {
-		if k.firstChild.n > n {
+		if k.firstChild.n() > n {
 			// relink
 			other.nextSibling = k.firstChild
 			k.firstChild = other
 			return nil
-		} else if k.firstChild.n == n {
+		} else if k.firstChild.n() == n {
 			// evict
 			other.nextSibling = k.firstChild.nextSibling
 			ret := k.firstChild
@@ -85,7 +76,7 @@ func (k *Node) SetNthChild(n uint16, other *Node) *Node {
 		other.nextSibling = k.firstChild.nextSibling
 		k.firstChild = other
 		return ret
-	} else if k.firstChild.n > n {
+	} else if k.firstChild.n() > n {
 		// relink
 		other.nextSibling = k.firstChild
 		k.firstChild = other
@@ -111,7 +102,7 @@ func (k *Node) SetNthChild(n uint16, other *Node) *Node {
 			ret := curr.nextSibling
 			curr.nextSibling = other
 			return ret
-		} else if curr.nextSibling.n > n {
+		} else if curr.nextSibling.n() > n {
 			/* relink
 			 *       other
 			 * curr -> nextSibling
@@ -134,7 +125,7 @@ func (k *Node) NthChild(n uint16) *Node {
 		if curr.n() == n {
 			// exact match
 			return curr
-		} else if curr.n > n {
+		} else if curr.n() > n {
 			// overshoot, nth child doesn't exist
 			return nil
 		}

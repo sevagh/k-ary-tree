@@ -9,7 +9,7 @@ const ( // region quadrants
 
 // RegionQuadtree creates a region quadtree karytree.Node
 func RegionQuadtree(key interface{}) Node {
-	return NewNode(4, key)
+	return NewNode(key)
 }
 
 // SetNW sets the north-west quadrant

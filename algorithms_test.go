@@ -9,10 +9,10 @@ import (
 func TestBFS(t *testing.T) {
 	//k = 1 == we basically have a linked list
 
-	a := karytree.NewNode(1, "a")
-	b := karytree.NewNode(1, "b")
-	c := karytree.NewNode(1, "c")
-	d := karytree.NewNode(1, "d")
+	a := karytree.NewNode("a")
+	b := karytree.NewNode("b")
+	c := karytree.NewNode("c")
+	d := karytree.NewNode("d")
 
 	a.SetNthChild(0, &b)
 	b.SetNthChild(0, &c)
@@ -41,10 +41,10 @@ func TestBFS(t *testing.T) {
 func TestBFSEarlyQuit(t *testing.T) {
 	//k = 1 == we basically have a linked list
 
-	a := karytree.NewNode(1, "a")
-	b := karytree.NewNode(1, "b")
-	c := karytree.NewNode(1, "c")
-	d := karytree.NewNode(1, "d")
+	a := karytree.NewNode("a")
+	b := karytree.NewNode("b")
+	c := karytree.NewNode("c")
+	d := karytree.NewNode("d")
 
 	a.SetNthChild(0, &b)
 	b.SetNthChild(0, &c)
@@ -104,8 +104,7 @@ func TestNotEqualTrees(t *testing.T) {
 	tree1 := constructTree(8)
 	tree2 := constructTree(8)
 
-	x := tree2.NthChild(3)
-	rand := karytree.NewNode(x.K(), "hello world")
+	rand := karytree.NewNode("hello world")
 	tree2.SetNthChild(3, &rand)
 
 	if karytree.Equals(&tree1, &tree2) {
@@ -115,23 +114,23 @@ func TestNotEqualTrees(t *testing.T) {
 
 func constructTree(K int) karytree.Node {
 	var key int
-	tree := karytree.NewNode(K, key)
+	tree := karytree.NewNode(key)
 	key++
 
 	var curr *karytree.Node
 	curr = &tree
 
 	for k := uint16(0); k < uint16(K); k++ {
-		child := karytree.NewNode(K, key)
+		child := karytree.NewNode(key)
 		key++
 		curr.SetNthChild(k, &child)
 		for l := uint16(0); l < uint16(K); l++ {
-			grandchild := karytree.NewNode(K, key)
+			grandchild := karytree.NewNode(key)
 			key++
 			nth := curr.NthChild(k)
 			nth.SetNthChild(l, &grandchild)
 			for m := uint16(0); m < uint16(K); m++ {
-				greatgrandchild := karytree.NewNode(K, key)
+				greatgrandchild := karytree.NewNode(key)
 				key++
 
 				grandnth := nth.NthChild(l)
@@ -148,7 +147,7 @@ func constructTreeSparse(K int) karytree.Node {
 
 	var key int
 
-	tree = karytree.NewNode(K, key)
+	tree = karytree.NewNode(key)
 	key++
 
 	var curr *karytree.Node
@@ -156,14 +155,14 @@ func constructTreeSparse(K int) karytree.Node {
 
 	for i := uint16(0); i < uint16(K); i++ {
 		if i%2 == 0 {
-			child := karytree.NewNode(K, key)
+			child := karytree.NewNode(key)
 			key++
 
 			// fill even children
 			curr.SetNthChild(i, &child)
 			for j := uint16(0); j < uint16(K); j++ {
 				if j%2 != 0 {
-					grandchild := karytree.NewNode(K, key)
+					grandchild := karytree.NewNode(key)
 					key++
 					ith := curr.NthChild(i)
 
@@ -172,7 +171,7 @@ func constructTreeSparse(K int) karytree.Node {
 					for k := uint16(0); k < uint16(K); k++ {
 						if k%2 == 0 {
 							// fill even great grandchildren
-							greatgrandchild := karytree.NewNode(K, key)
+							greatgrandchild := karytree.NewNode(key)
 							key++
 							jth := ith.NthChild(j)
 
