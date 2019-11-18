@@ -34,17 +34,15 @@ for next != nil {
 A karytree.Node is defined as:
 
 ```go
-type KeyType generic.Type
-
 type Node struct {
-	key         KeyType
+	key         interface{}
 	n           uint
 	firstChild  *Node
 	nextSibling *Node
 }
 ```
 
-The code works as if key were an `interface{}`, but by using genny you have the option of generating copies of [k-ary-tree.go](./k-ary-tree.go) with specific KeyTypes for higher performance. E.g. I use a generated copy with `KeyType = uint32` in an experimental branch of [quadtree-compression](https://github.com/sevagh/quadtree-compression/tree/k-ary-tree-experiment) project with OK (but not great) results. The sibling linked-list implementation incurs some CPU costs.
+I experimented with genny to generate a copy of k-ary-tree with `uint32` keys in an experimental branch of [quadtree-compression](https://github.com/sevagh/quadtree-compression/tree/k-ary-tree-experiment) project with OK (but not great) results. The sibling linked-list implementation incurs some CPU costs.
 
 ### Sibling list operations
 

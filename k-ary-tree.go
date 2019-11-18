@@ -11,22 +11,17 @@ for in-range indexing (e.g. don't set a 5th child of a k=3 node).
 */
 package karytree
 
-import "github.com/cheekybits/genny/generic"
-
-// KeyType is for generating specific trees with genny
-type KeyType generic.Type
-
 // A Node is a typical recursive tree node, and it represents a tree
 // when it's traversed. The key is for data stored in the node.
 type Node struct {
-	key         KeyType
+	key         interface{}
 	n           uint
 	firstChild  *Node
 	nextSibling *Node
 }
 
 // NewNode creates a new node data key.
-func NewNode(key KeyType) Node {
+func NewNode(key interface{}) Node {
 	n := Node{}
 	n.key = key
 	return n
@@ -110,11 +105,11 @@ func (k *Node) NthChild(n uint) *Node {
 }
 
 // Key gets the data stored in a node
-func (k *Node) Key() KeyType {
+func (k *Node) Key() interface{} {
 	return k.key
 }
 
 // SetKey modifies the data in a node
-func (k *Node) SetKey(newKey KeyType) {
+func (k *Node) SetKey(newKey interface{}) {
 	k.key = newKey
 }

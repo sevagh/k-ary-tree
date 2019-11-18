@@ -6,7 +6,7 @@ const (
 )
 
 // Binary creates a binary karytree.Node
-func Binary(key KeyType) Node {
+func Binary(key interface{}) Node {
 	return NewNode(key)
 }
 
