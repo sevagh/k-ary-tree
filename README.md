@@ -80,39 +80,3 @@ fmt.Println(kary.Equals(&a, &a_))
 ```
 
 The field `n` determines which child a node is. It's a `uint` which gives us plenty of headroom.
-
-### Traversals
-
-I simulate Python generators with channels in Go, inspired by [this](https://blog.carlmjohnson.net/post/on-using-go-channels-like-python-generators/). Let's look at the simplest - the BFS:
-
-```go
-func BFS(root *Node, quit <-chan struct{}) <-chan *Node {
-	nChan := make(chan *Node)
-
-	go func() {
-		defer close(nChan)
-		queue := []*Node{root}
-		var curr *Node
-
-		for len(queue) > 0 {
-			curr, queue = queue[0], queue[1:]
-
-			select {
-			case <-quit:
-				return
-			case nChan <- curr:
-			}
-
-			next := curr.firstChild
-			for next != nil {
-				queue = append(queue, next)
-				next = next.nextSibling
-			}
-		}
-	}()
-
-	return nChan
-}
-```
-
-The channel-based goroutine tricks are there to "suspend and resume" the execution of the function like a Python generator. The recursive traversals are implemented using the visitor pattern.
