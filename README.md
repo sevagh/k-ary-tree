@@ -42,7 +42,11 @@ type Node struct {
 }
 ```
 
-I experimented with genny to generate a copy of k-ary-tree with `uint32` keys in an experimental branch of [quadtree-compression](https://github.com/sevagh/quadtree-compression/tree/k-ary-tree-experiment) project with OK (but not great) results. The sibling linked-list implementation incurs some CPU costs.
+### Generics
+
+Months ago, I experimented with genny to generate a copy of k-ary-tree with `uint32` keys in an experimental branch of [quadtree-compression](https://github.com/sevagh/quadtree-compression/tree/k-ary-tree-experiment) project with OK (but not great) results. The sibling linked-list implementation incurs some CPU costs.
+
+On 2020/06/22, I experimented with the [new generics proposal](https://go.googlesource.com/proposal/+/master/design/go2draft-generics-overview.md) ([overview](https://blog.golang.org/generics-next-step), [go2go README](https://go.googlesource.com/go/+/refs/heads/dev.go2go/README.go2go.md)). The resulting code is [here](./k-ary-tree_generics.go2). I again attempted to use it in a real project, [quadtree-compression](https://github.com/sevagh/quadtree-compression/tree/generics-experiment), but go2go takes too long (30+ min with no output). Presumably the `go2go` tool isn't ready to compile code with significant dependencies yet.
 
 ### Sibling list operations
 
