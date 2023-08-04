@@ -13,10 +13,10 @@ import (
 func TestBasicLinkedList(t *testing.T) {
 	//k = 1 == we basically have a linked list
 
-	a := karytree.NewNode("a")
-	b := karytree.NewNode("b")
-	c := karytree.NewNode("c")
-	d := karytree.NewNode("d")
+	a := karytree.NewNode[interface{}]("a")
+	b := karytree.NewNode[interface{}]("b")
+	c := karytree.NewNode[interface{}]("c")
+	d := karytree.NewNode[interface{}]("d")
 
 	a.SetNthChild(0, &b)
 	b.SetNthChild(0, &c)
@@ -63,7 +63,7 @@ func TestBasicLinkedList(t *testing.T) {
 }
 
 func TestModifyKey(t *testing.T) {
-	a := karytree.NewNode("a")
+	a := karytree.NewNode[interface{}]("a")
 	if a.Key().(string) != "a" {
 		t.Errorf("key was 'a', should not be %+v\n", a.Key().(string))
 	}
@@ -75,11 +75,11 @@ func TestModifyKey(t *testing.T) {
 }
 
 func TestSiblingTreeNLogic(t *testing.T) {
-	a := karytree.NewNode("a")
-	b := karytree.NewNode("b")
-	c := karytree.NewNode("c")
-	d := karytree.NewNode("d")
-	e := karytree.NewNode("e")
+	a := karytree.NewNode[interface{}]("a")
+	b := karytree.NewNode[interface{}]("b")
+	c := karytree.NewNode[interface{}]("c")
+	d := karytree.NewNode[interface{}]("d")
+	e := karytree.NewNode[interface{}]("e")
 
 	a.SetNthChild(32, &b)
 	a.SetNthChild(5, &c)
@@ -101,10 +101,10 @@ func TestSiblingTreeNLogic(t *testing.T) {
 }
 
 func TestSetSameChildEvictsFormer(t *testing.T) {
-	a := karytree.NewNode("a")
-	b := karytree.NewNode("b")
-	c := karytree.NewNode("c")
-	d := karytree.NewNode("d")
+	a := karytree.NewNode[interface{}]("a")
+	b := karytree.NewNode[interface{}]("b")
+	c := karytree.NewNode[interface{}]("c")
+	d := karytree.NewNode[interface{}]("d")
 
 	a.SetNthChild(4, &b)
 	a.SetNthChild(5, &d)
@@ -122,15 +122,15 @@ func TestSetSameChildEvictsFormer(t *testing.T) {
 		t.Errorf("evicted node's siblings weren't inherited")
 	}
 
-	e := karytree.NewNode("e")
-	f := karytree.NewNode("f")
+	e := karytree.NewNode[interface{}]("e")
+	f := karytree.NewNode[interface{}]("f")
 
 	a.SetNthChild(6, &e)
 	evicted = a.SetNthChild(6, &f)
 }
 
 type karytreeMachine struct {
-	r     karytree.Node
+	r     karytree.Node[interface{}]
 	path  [][]uint
 	state []interface{}
 }
@@ -185,7 +185,7 @@ func getKFuzzedKey() interface{} {
 }
 
 func (m *karytreeMachine) Init(t *rapid.T) {
-	m.r = karytree.NewNode(getKFuzzedKey())
+	m.r = karytree.NewNode[interface{}](getKFuzzedKey())
 	t.Logf("Created k-ary-tree root node\n")
 }
 
@@ -199,7 +199,7 @@ func (m *karytreeMachine) Get(t *rapid.T) {
 
 	t.Logf("path is: %+v\n", currPath)
 
-	var curr *karytree.Node
+	var curr *karytree.Node[interface{}]
 	curr = &m.r
 	for _, p := range currPath {
 		curr = curr.NthChild(p)
@@ -218,7 +218,7 @@ func (m *karytreeMachine) Put(t *rapid.T) {
 	// can't set nth child > k for a k-ary tree
 	path := rapid.SlicesOf(rapid.UintsRange(0, ^uint(0))).Draw(t, "nthChild").([]uint)
 
-	var curr *karytree.Node
+	var curr *karytree.Node[interface{}]
 	var lastFuzzedKey interface{}
 	curr = &m.r
 	lastFuzzedKey = curr.Key()
@@ -230,7 +230,7 @@ func (m *karytreeMachine) Put(t *rapid.T) {
 			lastFuzzedKey = curr.Key()
 		} else {
 			newFuzzedKey := getKFuzzedKey()
-			newNode := karytree.NewNode(newFuzzedKey)
+			newNode := karytree.NewNode[interface{}](newFuzzedKey)
 			curr.SetNthChild(p, &newNode)
 			curr = &newNode
 			lastFuzzedKey = newFuzzedKey
@@ -251,10 +251,10 @@ func TestKarytreePropertyFuzz(t *testing.T) {
 func TestBFS(t *testing.T) {
 	//k = 1 == we basically have a linked list
 
-	a := karytree.NewNode("a")
-	b := karytree.NewNode("b")
-	c := karytree.NewNode("c")
-	d := karytree.NewNode("d")
+	a := karytree.NewNode[interface{}]("a")
+	b := karytree.NewNode[interface{}]("b")
+	c := karytree.NewNode[interface{}]("c")
+	d := karytree.NewNode[interface{}]("d")
 
 	a.SetNthChild(0, &b)
 	b.SetNthChild(0, &c)
@@ -283,10 +283,10 @@ func TestBFS(t *testing.T) {
 func TestBFSEarlyQuit(t *testing.T) {
 	//k = 1 == we basically have a linked list
 
-	a := karytree.NewNode("a")
-	b := karytree.NewNode("b")
-	c := karytree.NewNode("c")
-	d := karytree.NewNode("d")
+	a := karytree.NewNode[interface{}]("a")
+	b := karytree.NewNode[interface{}]("b")
+	c := karytree.NewNode[interface{}]("c")
+	d := karytree.NewNode[interface{}]("d")
 
 	a.SetNthChild(0, &b)
 	b.SetNthChild(0, &c)
@@ -329,7 +329,7 @@ func TestCompareSparseTrees(t *testing.T) {
 }
 
 func TestEmptyTreesEqual(t *testing.T) {
-	if !karytree.Equals(nil, nil) {
+	if !karytree.Equals[interface{}](nil, nil) {
 		t.Errorf("two nil nodes are be equal")
 	}
 }
@@ -346,7 +346,7 @@ func TestNotEqualTrees(t *testing.T) {
 	tree1 := constructTree(8)
 	tree2 := constructTree(8)
 
-	rand := karytree.NewNode("hello world")
+	rand := karytree.NewNode[interface{}]("hello world")
 	tree2.SetNthChild(3, &rand)
 
 	if karytree.Equals(&tree1, &tree2) {
@@ -355,13 +355,13 @@ func TestNotEqualTrees(t *testing.T) {
 }
 
 func TestTreeInsertionSortedOrderEquals(t *testing.T) {
-	a := karytree.NewNode("a")
-	b := karytree.NewNode("b")
-	c := karytree.NewNode("c")
+	a := karytree.NewNode[interface{}]("a")
+	b := karytree.NewNode[interface{}]("b")
+	c := karytree.NewNode[interface{}]("c")
 
-	a_ := karytree.NewNode("a")
-	b_ := karytree.NewNode("b")
-	c_ := karytree.NewNode("c")
+	a_ := karytree.NewNode[interface{}]("a")
+	b_ := karytree.NewNode[interface{}]("b")
+	c_ := karytree.NewNode[interface{}]("c")
 
 	a.SetNthChild(4, &b)
 	a.SetNthChild(2, &c)
@@ -375,13 +375,13 @@ func TestTreeInsertionSortedOrderEquals(t *testing.T) {
 }
 
 func TestTreeInsertionSortedOrderNotEquals(t *testing.T) {
-	a := karytree.NewNode("a")
-	b := karytree.NewNode("b")
-	c := karytree.NewNode("c")
+	a := karytree.NewNode[interface{}]("a")
+	b := karytree.NewNode[interface{}]("b")
+	c := karytree.NewNode[interface{}]("c")
 
-	a_ := karytree.NewNode("a")
-	b_ := karytree.NewNode("b")
-	c_ := karytree.NewNode("c")
+	a_ := karytree.NewNode[interface{}]("a")
+	b_ := karytree.NewNode[interface{}]("b")
+	c_ := karytree.NewNode[interface{}]("c")
 
 	a.SetNthChild(4, &b)
 	a.SetNthChild(5, &c)
@@ -394,25 +394,25 @@ func TestTreeInsertionSortedOrderNotEquals(t *testing.T) {
 	}
 }
 
-func constructTree(K int) karytree.Node {
+func constructTree(K int) karytree.Node[interface{}] {
 	var key int
-	tree := karytree.NewNode(key)
+	tree := karytree.NewNode[interface{}](key)
 	key++
 
-	var curr *karytree.Node
+	var curr *karytree.Node[interface{}]
 	curr = &tree
 
 	for k := uint(0); k < uint(K); k++ {
-		child := karytree.NewNode(key)
+		child := karytree.NewNode[interface{}](key)
 		key++
 		curr.SetNthChild(k, &child)
 		for l := uint(0); l < uint(K); l++ {
-			grandchild := karytree.NewNode(key)
+			grandchild := karytree.NewNode[interface{}](key)
 			key++
 			nth := curr.NthChild(k)
 			nth.SetNthChild(l, &grandchild)
 			for m := uint(0); m < uint(K); m++ {
-				greatgrandchild := karytree.NewNode(key)
+				greatgrandchild := karytree.NewNode[interface{}](key)
 				key++
 
 				grandnth := nth.NthChild(l)
@@ -424,27 +424,27 @@ func constructTree(K int) karytree.Node {
 	return tree
 }
 
-func constructTreeSparse(K int) karytree.Node {
-	var tree karytree.Node
+func constructTreeSparse(K int) karytree.Node[interface{}] {
+	var tree karytree.Node[interface{}]
 
 	var key int
 
-	tree = karytree.NewNode(key)
+	tree = karytree.NewNode[interface{}](key)
 	key++
 
-	var curr *karytree.Node
+	var curr *karytree.Node[interface{}]
 	curr = &tree
 
 	for i := uint(0); i < uint(K); i++ {
 		if i%2 == 0 {
-			child := karytree.NewNode(key)
+			child := karytree.NewNode[interface{}](key)
 			key++
 
 			// fill even children
 			curr.SetNthChild(i, &child)
 			for j := uint(0); j < uint(K); j++ {
 				if j%2 != 0 {
-					grandchild := karytree.NewNode(key)
+					grandchild := karytree.NewNode[interface{}](key)
 					key++
 					ith := curr.NthChild(i)
 
@@ -453,7 +453,7 @@ func constructTreeSparse(K int) karytree.Node {
 					for k := uint(0); k < uint(K); k++ {
 						if k%2 == 0 {
 							// fill even great grandchildren
-							greatgrandchild := karytree.NewNode(key)
+							greatgrandchild := karytree.NewNode[interface{}](key)
 							key++
 							jth := ith.NthChild(j)
 

@@ -11,7 +11,7 @@ import (
 )
 
 type binarytreeMachine struct {
-	r     karytree.Node
+	r     karytree.Node[interface{}]
 	state []interface{}
 	path  [][]int
 }
@@ -78,8 +78,8 @@ func (m *binarytreeMachine) Get(t *rapid.T) {
 
 	t.Logf("path is: %+v\n", currPath)
 
-	var curr *karytree.Node
-	var next *karytree.Node
+	var curr *karytree.Node[interface{}]
+	var next *karytree.Node[interface{}]
 	curr = &m.r
 	for _, p := range currPath {
 		if p == 0 {
@@ -101,12 +101,12 @@ func (m *binarytreeMachine) Get(t *rapid.T) {
 func (m *binarytreeMachine) Put(t *rapid.T) {
 	path := rapid.SlicesOf(rapid.IntsRange(0, 1)).Draw(t, "left-or-right").([]int)
 
-	var curr *karytree.Node
+	var curr *karytree.Node[interface{}]
 	var lastFuzzedKey interface{}
 	curr = &m.r
 	lastFuzzedKey = curr.Key()
 	for _, p := range path {
-		var existingChild *karytree.Node
+		var existingChild *karytree.Node[interface{}]
 		if p == 0 {
 			existingChild = curr.Left()
 		} else {
@@ -138,7 +138,7 @@ func TestBinaryTreePropertyFuzz(t *testing.T) {
 }
 
 func TestTreeEquals(t *testing.T) {
-	if !karytree.Equals(nil, nil) {
+	if !karytree.Equals[interface{}](nil, nil) {
 		t.Errorf("nil node should be nil node")
 	}
 
@@ -175,10 +175,10 @@ func TestTreeEquals(t *testing.T) {
 }
 
 func TestBFSBinary(t *testing.T) {
-	a := karytree.Binary("a")
-	b := karytree.Binary("b")
-	c := karytree.Binary("c")
-	d := karytree.Binary("d")
+	a := karytree.Binary[interface{}]("a")
+	b := karytree.Binary[interface{}]("b")
+	c := karytree.Binary[interface{}]("c")
+	d := karytree.Binary[interface{}]("d")
 
 	a.SetLeft(&b)
 	b.SetRight(&c)
@@ -204,10 +204,10 @@ func TestBFSBinary(t *testing.T) {
 }
 
 func TestBFSBinaryEarlyQuit(t *testing.T) {
-	a := karytree.Binary("a")
-	b := karytree.Binary("b")
-	c := karytree.Binary("c")
-	d := karytree.Binary("d")
+	a := karytree.Binary[interface{}]("a")
+	b := karytree.Binary[interface{}]("b")
+	c := karytree.Binary[interface{}]("c")
+	d := karytree.Binary[interface{}]("d")
 
 	a.SetLeft(&b)
 	b.SetLeft(&c)
@@ -232,13 +232,13 @@ func TestBFSBinaryEarlyQuit(t *testing.T) {
 }
 
 func TestInorderIterative1(t *testing.T) {
-	a := karytree.Binary("a")
-	b := karytree.Binary("b")
-	c := karytree.Binary("c")
-	e := karytree.Binary("e")
-	f := karytree.Binary("f")
-	g := karytree.Binary("g")
-	h := karytree.Binary("h")
+	a := karytree.Binary[interface{}]("a")
+	b := karytree.Binary[interface{}]("b")
+	c := karytree.Binary[interface{}]("c")
+	e := karytree.Binary[interface{}]("e")
+	f := karytree.Binary[interface{}]("f")
+	g := karytree.Binary[interface{}]("g")
+	h := karytree.Binary[interface{}]("h")
 
 	a.SetLeft(&b)
 	a.SetRight(&c)
@@ -282,12 +282,12 @@ func TestInorderIterative1(t *testing.T) {
 }
 
 func TestInorderIterative2(t *testing.T) {
-	a := karytree.Binary("a")
-	b := karytree.Binary("b")
-	c := karytree.Binary("c")
-	d := karytree.Binary("d")
-	e := karytree.Binary("e")
-	f := karytree.Binary("f")
+	a := karytree.Binary[interface{}]("a")
+	b := karytree.Binary[interface{}]("b")
+	c := karytree.Binary[interface{}]("c")
+	d := karytree.Binary[interface{}]("d")
+	e := karytree.Binary[interface{}]("e")
+	f := karytree.Binary[interface{}]("f")
 
 	a.SetLeft(&b)
 	b.SetRight(&c)
@@ -328,10 +328,10 @@ func TestInorderIterative2(t *testing.T) {
 }
 
 func TestInorderIterativeEarlyQuit(t *testing.T) {
-	a := karytree.Binary("a")
-	b := karytree.Binary("b")
-	c := karytree.Binary("c")
-	d := karytree.Binary("d")
+	a := karytree.Binary[interface{}]("a")
+	b := karytree.Binary[interface{}]("b")
+	c := karytree.Binary[interface{}]("c")
+	d := karytree.Binary[interface{}]("d")
 
 	a.SetLeft(&b)
 	b.SetLeft(&c)
@@ -356,13 +356,13 @@ func TestInorderIterativeEarlyQuit(t *testing.T) {
 }
 
 func TestPreorderIterative1(t *testing.T) {
-	a := karytree.Binary("a")
-	b := karytree.Binary("b")
-	c := karytree.Binary("c")
-	e := karytree.Binary("e")
-	f := karytree.Binary("f")
-	g := karytree.Binary("g")
-	h := karytree.Binary("h")
+	a := karytree.Binary[interface{}]("a")
+	b := karytree.Binary[interface{}]("b")
+	c := karytree.Binary[interface{}]("c")
+	e := karytree.Binary[interface{}]("e")
+	f := karytree.Binary[interface{}]("f")
+	g := karytree.Binary[interface{}]("g")
+	h := karytree.Binary[interface{}]("h")
 
 	a.SetLeft(&b)
 	a.SetRight(&c)
@@ -406,12 +406,12 @@ func TestPreorderIterative1(t *testing.T) {
 }
 
 func TestPreorderIterative2(t *testing.T) {
-	a := karytree.Binary("a")
-	b := karytree.Binary("b")
-	c := karytree.Binary("c")
-	d := karytree.Binary("d")
-	e := karytree.Binary("e")
-	f := karytree.Binary("f")
+	a := karytree.Binary[interface{}]("a")
+	b := karytree.Binary[interface{}]("b")
+	c := karytree.Binary[interface{}]("c")
+	d := karytree.Binary[interface{}]("d")
+	e := karytree.Binary[interface{}]("e")
+	f := karytree.Binary[interface{}]("f")
 
 	a.SetLeft(&b)
 	b.SetRight(&c)
@@ -452,10 +452,10 @@ func TestPreorderIterative2(t *testing.T) {
 }
 
 func TestPreorderIterativeEarlyQuit(t *testing.T) {
-	a := karytree.Binary("a")
-	b := karytree.Binary("b")
-	c := karytree.Binary("c")
-	d := karytree.Binary("d")
+	a := karytree.Binary[interface{}]("a")
+	b := karytree.Binary[interface{}]("b")
+	c := karytree.Binary[interface{}]("c")
+	d := karytree.Binary[interface{}]("d")
 
 	a.SetLeft(&b)
 	b.SetLeft(&c)
@@ -480,13 +480,13 @@ func TestPreorderIterativeEarlyQuit(t *testing.T) {
 }
 
 func TestPostorderIterative1(t *testing.T) {
-	a := karytree.Binary("a")
-	b := karytree.Binary("b")
-	c := karytree.Binary("c")
-	e := karytree.Binary("e")
-	f := karytree.Binary("f")
-	g := karytree.Binary("g")
-	h := karytree.Binary("h")
+	a := karytree.Binary[interface{}]("a")
+	b := karytree.Binary[interface{}]("b")
+	c := karytree.Binary[interface{}]("c")
+	e := karytree.Binary[interface{}]("e")
+	f := karytree.Binary[interface{}]("f")
+	g := karytree.Binary[interface{}]("g")
+	h := karytree.Binary[interface{}]("h")
 
 	a.SetLeft(&b)
 	a.SetRight(&c)
@@ -535,12 +535,12 @@ func TestPostorderIterative1(t *testing.T) {
 }
 
 func TestPostorderIterative2(t *testing.T) {
-	a := karytree.Binary("a")
-	b := karytree.Binary("b")
-	c := karytree.Binary("c")
-	d := karytree.Binary("d")
-	e := karytree.Binary("e")
-	f := karytree.Binary("f")
+	a := karytree.Binary[interface{}]("a")
+	b := karytree.Binary[interface{}]("b")
+	c := karytree.Binary[interface{}]("c")
+	d := karytree.Binary[interface{}]("d")
+	e := karytree.Binary[interface{}]("e")
+	f := karytree.Binary[interface{}]("f")
 
 	a.SetLeft(&b)
 	b.SetRight(&c)
@@ -585,10 +585,10 @@ func TestPostorderIterative2(t *testing.T) {
 }
 
 func TestPostorderIterativeEarlyQuit(t *testing.T) {
-	a := karytree.Binary("a")
-	b := karytree.Binary("b")
-	c := karytree.Binary("c")
-	d := karytree.Binary("d")
+	a := karytree.Binary[interface{}]("a")
+	b := karytree.Binary[interface{}]("b")
+	c := karytree.Binary[interface{}]("c")
+	d := karytree.Binary[interface{}]("d")
 
 	a.SetLeft(&b)
 	b.SetLeft(&c)
@@ -613,13 +613,13 @@ func TestPostorderIterativeEarlyQuit(t *testing.T) {
 }
 
 func TestPostorderRecursive1(t *testing.T) {
-	a := karytree.Binary("a")
-	b := karytree.Binary("b")
-	c := karytree.Binary("c")
-	e := karytree.Binary("e")
-	f := karytree.Binary("f")
-	g := karytree.Binary("g")
-	h := karytree.Binary("h")
+	a := karytree.Binary[interface{}]("a")
+	b := karytree.Binary[interface{}]("b")
+	c := karytree.Binary[interface{}]("c")
+	e := karytree.Binary[interface{}]("e")
+	f := karytree.Binary[interface{}]("f")
+	g := karytree.Binary[interface{}]("g")
+	h := karytree.Binary[interface{}]("h")
 
 	a.SetLeft(&b)
 	a.SetRight(&c)
@@ -638,14 +638,14 @@ func TestPostorderRecursive1(t *testing.T) {
 		  e   f g   h
 	*/
 
-	nodes := []*karytree.Node{}
-	visit := func(node *karytree.Node) {
+	nodes := []*karytree.Node[interface{}]{}
+	visit := func(node *karytree.Node[interface{}]) {
 		nodes = append(nodes, node)
 	}
 
 	karytree.PostorderRecursive(&a, visit)
 	i := 0
-	var node *karytree.Node
+	var node *karytree.Node[interface{}]
 
 	for i, node = range nodes {
 		nodeKey := node.Key().(string)
@@ -672,12 +672,12 @@ func TestPostorderRecursive1(t *testing.T) {
 }
 
 func TestPostorderRecursive2(t *testing.T) {
-	a := karytree.Binary("a")
-	b := karytree.Binary("b")
-	c := karytree.Binary("c")
-	d := karytree.Binary("d")
-	e := karytree.Binary("e")
-	f := karytree.Binary("f")
+	a := karytree.Binary[interface{}]("a")
+	b := karytree.Binary[interface{}]("b")
+	c := karytree.Binary[interface{}]("c")
+	d := karytree.Binary[interface{}]("d")
+	e := karytree.Binary[interface{}]("e")
+	f := karytree.Binary[interface{}]("f")
 
 	a.SetLeft(&b)
 	b.SetRight(&c)
@@ -694,14 +694,14 @@ func TestPostorderRecursive2(t *testing.T) {
 		 	 / \
 			d   e
 	*/
-	nodes := []*karytree.Node{}
-	visit := func(node *karytree.Node) {
+	nodes := []*karytree.Node[interface{}]{}
+	visit := func(node *karytree.Node[interface{}]) {
 		nodes = append(nodes, node)
 	}
 
 	karytree.PostorderRecursive(&a, visit)
 	i := 0
-	var node *karytree.Node
+	var node *karytree.Node[interface{}]
 	for i, node = range nodes {
 		nodeKey := node.Key().(string)
 		if i == 0 && nodeKey != "f" {
@@ -728,13 +728,13 @@ func TestPostorderRecursive2(t *testing.T) {
 }
 
 func TestPreorderRecursive1(t *testing.T) {
-	a := karytree.Binary("a")
-	b := karytree.Binary("b")
-	c := karytree.Binary("c")
-	e := karytree.Binary("e")
-	f := karytree.Binary("f")
-	g := karytree.Binary("g")
-	h := karytree.Binary("h")
+	a := karytree.Binary[interface{}]("a")
+	b := karytree.Binary[interface{}]("b")
+	c := karytree.Binary[interface{}]("c")
+	e := karytree.Binary[interface{}]("e")
+	f := karytree.Binary[interface{}]("f")
+	g := karytree.Binary[interface{}]("g")
+	h := karytree.Binary[interface{}]("h")
 
 	a.SetLeft(&b)
 	a.SetRight(&c)
@@ -753,14 +753,14 @@ func TestPreorderRecursive1(t *testing.T) {
 		  e   f g   h
 	*/
 
-	nodes := []*karytree.Node{}
-	visit := func(node *karytree.Node) {
+	nodes := []*karytree.Node[interface{}]{}
+	visit := func(node *karytree.Node[interface{}]) {
 		nodes = append(nodes, node)
 	}
 
 	karytree.PreorderRecursive(&a, visit)
 	i := 0
-	var node *karytree.Node
+	var node *karytree.Node[interface{}]
 	for i, node = range nodes {
 		nodeKey := node.Key().(string)
 		if i == 0 && nodeKey != "a" {
@@ -786,12 +786,12 @@ func TestPreorderRecursive1(t *testing.T) {
 }
 
 func TestPreorderRecursive2(t *testing.T) {
-	a := karytree.Binary("a")
-	b := karytree.Binary("b")
-	c := karytree.Binary("c")
-	d := karytree.Binary("d")
-	e := karytree.Binary("e")
-	f := karytree.Binary("f")
+	a := karytree.Binary[interface{}]("a")
+	b := karytree.Binary[interface{}]("b")
+	c := karytree.Binary[interface{}]("c")
+	d := karytree.Binary[interface{}]("d")
+	e := karytree.Binary[interface{}]("e")
+	f := karytree.Binary[interface{}]("f")
 
 	a.SetLeft(&b)
 	b.SetRight(&c)
@@ -809,14 +809,14 @@ func TestPreorderRecursive2(t *testing.T) {
 			d   e
 	*/
 
-	nodes := []*karytree.Node{}
-	visit := func(node *karytree.Node) {
+	nodes := []*karytree.Node[interface{}]{}
+	visit := func(node *karytree.Node[interface{}]) {
 		nodes = append(nodes, node)
 	}
 
 	karytree.PreorderRecursive(&a, visit)
 	i := 0
-	var node *karytree.Node
+	var node *karytree.Node[interface{}]
 	for i, node = range nodes {
 		nodeKey := node.Key().(string)
 		if i == 0 && nodeKey != "a" {
@@ -840,13 +840,13 @@ func TestPreorderRecursive2(t *testing.T) {
 }
 
 func TestInorderRecursive1(t *testing.T) {
-	a := karytree.Binary("a")
-	b := karytree.Binary("b")
-	c := karytree.Binary("c")
-	e := karytree.Binary("e")
-	f := karytree.Binary("f")
-	g := karytree.Binary("g")
-	h := karytree.Binary("h")
+	a := karytree.Binary[interface{}]("a")
+	b := karytree.Binary[interface{}]("b")
+	c := karytree.Binary[interface{}]("c")
+	e := karytree.Binary[interface{}]("e")
+	f := karytree.Binary[interface{}]("f")
+	g := karytree.Binary[interface{}]("g")
+	h := karytree.Binary[interface{}]("h")
 
 	a.SetLeft(&b)
 	a.SetRight(&c)
@@ -865,14 +865,14 @@ func TestInorderRecursive1(t *testing.T) {
 		  e   f g   h
 	*/
 
-	nodes := []*karytree.Node{}
-	visit := func(node *karytree.Node) {
+	nodes := []*karytree.Node[interface{}]{}
+	visit := func(node *karytree.Node[interface{}]) {
 		nodes = append(nodes, node)
 	}
 
 	karytree.InorderRecursive(&a, visit)
 	i := 0
-	var node *karytree.Node
+	var node *karytree.Node[interface{}]
 	for i, node = range nodes {
 		nodeKey := node.Key().(string)
 		if i == 0 && nodeKey != "e" {
@@ -900,12 +900,12 @@ func TestInorderRecursive1(t *testing.T) {
 }
 
 func TestInorderRecursive2(t *testing.T) {
-	a := karytree.Binary("a")
-	b := karytree.Binary("b")
-	c := karytree.Binary("c")
-	d := karytree.Binary("d")
-	e := karytree.Binary("e")
-	f := karytree.Binary("f")
+	a := karytree.Binary[interface{}]("a")
+	b := karytree.Binary[interface{}]("b")
+	c := karytree.Binary[interface{}]("c")
+	d := karytree.Binary[interface{}]("d")
+	e := karytree.Binary[interface{}]("e")
+	f := karytree.Binary[interface{}]("f")
 
 	a.SetLeft(&b)
 	b.SetRight(&c)
@@ -923,14 +923,14 @@ func TestInorderRecursive2(t *testing.T) {
 			d   e
 	*/
 
-	nodes := []*karytree.Node{}
-	visit := func(node *karytree.Node) {
+	nodes := []*karytree.Node[interface{}]{}
+	visit := func(node *karytree.Node[interface{}]) {
 		nodes = append(nodes, node)
 	}
 
 	karytree.InorderRecursive(&a, visit)
 	i := 0
-	var node *karytree.Node
+	var node *karytree.Node[interface{}]
 	for i, node = range nodes {
 		nodeKey := node.Key().(string)
 		if i == 0 && nodeKey != "f" {

@@ -6,38 +6,38 @@ const (
 )
 
 // Binary creates a binary karytree.Node
-func Binary(key interface{}) Node {
+func Binary[T comparable](key T) Node[T] {
 	return NewNode(key)
 }
 
 // SetLeft sets the left child.
-func (k *Node) SetLeft(other *Node) {
+func (k *Node[T]) SetLeft(other *Node[T]) {
 	k.SetNthChild(left, other)
 }
 
 // SetRight sets the left child.
-func (k *Node) SetRight(other *Node) {
+func (k *Node[T]) SetRight(other *Node[T]) {
 	k.SetNthChild(right, other)
 }
 
 // Left gets the left child
-func (k *Node) Left() *Node {
+func (k *Node[T]) Left() *Node[T] {
 	return k.NthChild(left)
 }
 
 // Right gets the right child
-func (k *Node) Right() *Node {
+func (k *Node[T]) Right() *Node[T] {
 	return k.NthChild(right)
 }
 
 // InorderIterative is a channel-based iterative implementation of an preorder traversal.
-func InorderIterative(root *Node, quit <-chan struct{}) <-chan *Node {
-	nChan := make(chan *Node)
+func InorderIterative[T comparable](root *Node[T], quit <-chan struct{}) <-chan *Node[T] {
+	nChan := make(chan *Node[T])
 
 	go func() {
 		defer close(nChan)
-		stack := []*Node{}
-		var curr *Node
+		stack := []*Node[T]{}
+		var curr *Node[T]
 		curr = root
 
 		for {
@@ -66,13 +66,13 @@ func InorderIterative(root *Node, quit <-chan struct{}) <-chan *Node {
 }
 
 // PreorderIterative is a channel-based iterative implementation of an preorder traversal.
-func PreorderIterative(root *Node, quit <-chan struct{}) <-chan *Node {
-	nChan := make(chan *Node)
+func PreorderIterative[T comparable](root *Node[T], quit <-chan struct{}) <-chan *Node[T] {
+	nChan := make(chan *Node[T])
 
 	go func() {
 		defer close(nChan)
-		stack := []*Node{}
-		var curr *Node
+		stack := []*Node[T]{}
+		var curr *Node[T]
 		curr = root
 
 		for {
@@ -106,15 +106,15 @@ func PreorderIterative(root *Node, quit <-chan struct{}) <-chan *Node {
 }
 
 // PostorderIterative is a channel-based iterative implementation of an preorder traversal.
-func PostorderIterative(root *Node, quit <-chan struct{}) <-chan *Node {
-	nChan := make(chan *Node)
+func PostorderIterative[T comparable](root *Node[T], quit <-chan struct{}) <-chan *Node[T] {
+	nChan := make(chan *Node[T])
 
 	go func() {
 		defer close(nChan)
-		stack1 := []*Node{}
-		stack2 := []*Node{}
+		stack1 := []*Node[T]{}
+		stack2 := []*Node[T]{}
 
-		var curr *Node
+		var curr *Node[T]
 
 		stack1 = append(stack1, root)
 
@@ -146,11 +146,11 @@ func PostorderIterative(root *Node, quit <-chan struct{}) <-chan *Node {
 }
 
 // InorderRecursive is a recursive inorder traversal with visitors
-func InorderRecursive(root *Node, f func(*Node)) {
+func InorderRecursive[T comparable](root *Node[T], f func(*Node[T])) {
 	inorder(root, f)
 }
 
-func inorder(root *Node, f func(*Node)) {
+func inorder[T comparable](root *Node[T], f func(*Node[T])) {
 	if root != nil {
 		inorder(root.Left(), f)
 		f(root)
@@ -159,11 +159,11 @@ func inorder(root *Node, f func(*Node)) {
 }
 
 // PreorderRecursive is a recursive inorder traversal with visitors
-func PreorderRecursive(root *Node, f func(*Node)) {
+func PreorderRecursive[T comparable](root *Node[T], f func(*Node[T])) {
 	preorder(root, f)
 }
 
-func preorder(root *Node, f func(*Node)) {
+func preorder[T comparable](root *Node[T], f func(*Node[T])) {
 	if root != nil {
 		f(root)
 		preorder(root.Left(), f)
@@ -172,11 +172,11 @@ func preorder(root *Node, f func(*Node)) {
 }
 
 // PostorderRecursive is a recursive inorder traversal with visitors
-func PostorderRecursive(root *Node, f func(*Node)) {
+func PostorderRecursive[T comparable](root *Node[T], f func(*Node[T])) {
 	postorder(root, f)
 }
 
-func postorder(root *Node, f func(*Node)) {
+func postorder[T comparable](root *Node[T], f func(*Node[T])) {
 	if root != nil {
 		postorder(root.Left(), f)
 		postorder(root.Right(), f)

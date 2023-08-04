@@ -10,7 +10,7 @@ func BenchmarkKaryTreeK2Sparse(b *testing.B) {
 	prevTree := karyTreeKSparseHelper(2)
 
 	b.ResetTimer()
-	var tree karytree.Node
+	var tree karytree.Node[interface{}]
 
 	for i := 0; i < b.N; i++ {
 		tree = karyTreeKSparseHelper(2)
@@ -26,7 +26,7 @@ func BenchmarkKaryTreeK2VerySparse(b *testing.B) {
 	prevTree := karyTreeKVerySparseHelper(2)
 
 	b.ResetTimer()
-	var tree karytree.Node
+	var tree karytree.Node[interface{}]
 
 	for i := 0; i < b.N; i++ {
 		tree = karyTreeKVerySparseHelper(2)
@@ -42,7 +42,7 @@ func BenchmarkKaryTreeK2Complete(b *testing.B) {
 	prevTree := karyTreeKCompleteHelper(2)
 
 	b.ResetTimer()
-	var tree karytree.Node
+	var tree karytree.Node[interface{}]
 
 	for i := 0; i < b.N; i++ {
 		tree = karyTreeKCompleteHelper(2)
@@ -58,7 +58,7 @@ func BenchmarkKaryTreeK8Sparse(b *testing.B) {
 	prevTree := karyTreeKSparseHelper(8)
 
 	b.ResetTimer()
-	var tree karytree.Node
+	var tree karytree.Node[interface{}]
 
 	for i := 0; i < b.N; i++ {
 		tree = karyTreeKSparseHelper(8)
@@ -74,7 +74,7 @@ func BenchmarkKaryTreeK8VerySparse(b *testing.B) {
 	prevTree := karyTreeKVerySparseHelper(8)
 
 	b.ResetTimer()
-	var tree karytree.Node
+	var tree karytree.Node[interface{}]
 
 	for i := 0; i < b.N; i++ {
 		tree = karyTreeKVerySparseHelper(8)
@@ -90,7 +90,7 @@ func BenchmarkKaryTreeK8Complete(b *testing.B) {
 	prevTree := karyTreeKCompleteHelper(8)
 
 	b.ResetTimer()
-	var tree karytree.Node
+	var tree karytree.Node[interface{}]
 
 	for i := 0; i < b.N; i++ {
 		tree = karyTreeKCompleteHelper(8)
@@ -106,7 +106,7 @@ func BenchmarkKaryTreeK32Sparse(b *testing.B) {
 	prevTree := karyTreeKSparseHelper(32)
 
 	b.ResetTimer()
-	var tree karytree.Node
+	var tree karytree.Node[interface{}]
 
 	for i := 0; i < b.N; i++ {
 		tree = karyTreeKSparseHelper(32)
@@ -122,7 +122,7 @@ func BenchmarkKaryTreeK32VerySparse(b *testing.B) {
 	prevTree := karyTreeKVerySparseHelper(32)
 
 	b.ResetTimer()
-	var tree karytree.Node
+	var tree karytree.Node[interface{}]
 
 	for i := 0; i < b.N; i++ {
 		tree = karyTreeKVerySparseHelper(32)
@@ -138,7 +138,7 @@ func BenchmarkKaryTreeK32Complete(b *testing.B) {
 	prevTree := karyTreeKCompleteHelper(32)
 
 	b.ResetTimer()
-	var tree karytree.Node
+	var tree karytree.Node[interface{}]
 
 	for i := 0; i < b.N; i++ {
 		tree = karyTreeKCompleteHelper(32)
@@ -150,27 +150,27 @@ func BenchmarkKaryTreeK32Complete(b *testing.B) {
 	}
 }
 
-func karyTreeKSparseHelper(K int) karytree.Node {
-	var tree karytree.Node
+func karyTreeKSparseHelper(K int) karytree.Node[interface{}] {
+	var tree karytree.Node[interface{}]
 
 	var key int
 
-	tree = karytree.NewNode(key)
+	tree = karytree.NewNode[interface{}](key)
 	key++
 
-	var curr *karytree.Node
+	var curr *karytree.Node[interface{}]
 	curr = &tree
 
 	for i := uint(0); i < uint(K); i++ {
 		if i%2 == 0 {
-			child := karytree.NewNode(key)
+			child := karytree.NewNode[interface{}](key)
 			key++
 
 			// fill even children
 			curr.SetNthChild(i, &child)
 			for j := uint(0); j < uint(K); j++ {
 				if j%2 != 0 {
-					grandchild := karytree.NewNode(key)
+					grandchild := karytree.NewNode[interface{}](key)
 					key++
 					ith := curr.NthChild(i)
 
@@ -179,7 +179,7 @@ func karyTreeKSparseHelper(K int) karytree.Node {
 					for k := uint(0); k < uint(K); k++ {
 						if k%2 == 0 {
 							// fill even great grandchildren
-							greatgrandchild := karytree.NewNode(key)
+							greatgrandchild := karytree.NewNode[interface{}](key)
 							key++
 							jth := ith.NthChild(j)
 
@@ -194,29 +194,29 @@ func karyTreeKSparseHelper(K int) karytree.Node {
 	return tree
 }
 
-func karyTreeKCompleteHelper(K int) karytree.Node {
-	var tree karytree.Node
+func karyTreeKCompleteHelper(K int) karytree.Node[interface{}] {
+	var tree karytree.Node[interface{}]
 
 	var key int
 
-	tree = karytree.NewNode(key)
+	tree = karytree.NewNode[interface{}](key)
 	key++
 
-	var curr *karytree.Node
+	var curr *karytree.Node[interface{}]
 	curr = &tree
 
 	for i := uint(0); i < uint(K); i++ {
-		child := karytree.NewNode(key)
+		child := karytree.NewNode[interface{}](key)
 		key++
 		curr.SetNthChild(i, &child)
 		for j := uint(0); j < uint(K); j++ {
-			grandchild := karytree.NewNode(key)
+			grandchild := karytree.NewNode[interface{}](key)
 			key++
 
 			ith := curr.NthChild(i)
 			ith.SetNthChild(j, &grandchild)
 			for k := uint(0); k < uint(K); k++ {
-				greatgrandchild := karytree.NewNode(key)
+				greatgrandchild := karytree.NewNode[interface{}](key)
 				key++
 
 				jth := ith.NthChild(j)
@@ -228,27 +228,27 @@ func karyTreeKCompleteHelper(K int) karytree.Node {
 	return tree
 }
 
-func karyTreeKVerySparseHelper(K int) karytree.Node {
-	var tree karytree.Node
+func karyTreeKVerySparseHelper(K int) karytree.Node[interface{}] {
+	var tree karytree.Node[interface{}]
 
 	var key int
 
-	tree = karytree.NewNode(key)
+	tree = karytree.NewNode[interface{}](key)
 	key++
 
-	var curr *karytree.Node
+	var curr *karytree.Node[interface{}]
 	curr = &tree
 
 	for i := uint(0); i < uint(K); i++ {
 		if i == 0 {
-			child := karytree.NewNode(key)
+			child := karytree.NewNode[interface{}](key)
 			key++
 
 			// fill even children
 			curr.SetNthChild(i, &child)
 			for j := uint(0); j < uint(K); j++ {
 				if j == 0 {
-					grandchild := karytree.NewNode(key)
+					grandchild := karytree.NewNode[interface{}](key)
 					key++
 					ith := curr.NthChild(i)
 
@@ -257,7 +257,7 @@ func karyTreeKVerySparseHelper(K int) karytree.Node {
 					for k := uint(0); k < uint(K); k++ {
 						if k == 0 {
 							// fill even great grandchildren
-							greatgrandchild := karytree.NewNode(key)
+							greatgrandchild := karytree.NewNode[interface{}](key)
 							key++
 							jth := ith.NthChild(j)
 
